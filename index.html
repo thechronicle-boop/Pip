@@ -3,9 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Puddle</title>
-<meta name="description" content="Puddle: a little jelly-drop pet that lives in your browser. Feed it, bathe it, tuck it in and play games for coins.">
-<meta name="theme-color" content="#7fe0c3">
+<title>Pip</title>
+<meta name="description" content="Pip: a fluffy baby penguin that lives in your browser. Feed it, bathe it, tuck it in and play games for coins.">
+<meta name="theme-color" content="#bcd3f0">
+<link rel="icon" href="pip.webp">
+<link rel="preload" as="image" href="pip.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,20 +18,11 @@
 <!-- ============ LOADING SCREEN ============ -->
 <section id="loader" class="screen">
   <div class="loader-inner">
-    <svg class="loader-pet" viewBox="0 0 200 200" aria-hidden="true">
-      <ellipse cx="100" cy="192" rx="50" ry="6" fill="rgba(0,0,0,.12)"/>
-      <path d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z" fill="#7fe0c3" stroke="#4fb596" stroke-width="4"/>
-      <circle cx="76" cy="122" r="15" fill="#fff"/><circle cx="124" cy="122" r="15" fill="#fff"/>
-      <circle cx="78" cy="124" r="7" fill="#2b2140"/><circle cx="126" cy="124" r="7" fill="#2b2140"/>
-      <path d="M86 150 Q100 164 114 150" stroke="#2b2140" stroke-width="4" fill="none" stroke-linecap="round"/>
-      <ellipse cx="60" cy="143" rx="11" ry="6" fill="#ff8fa3" opacity=".55"/><ellipse cx="140" cy="143" rx="11" ry="6" fill="#ff8fa3" opacity=".55"/>
-      <path d="M100 22 Q97 12 101 4" stroke="#3c9a6e" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M101 8 Q113 -3 124 5 Q113 16 101 8Z" fill="#59c48a"/>
-    </svg>
-    <h1 class="logo">Puddle</h1>
-    <p class="tagline">your little jelly-drop friend</p>
+    <img class="loader-pet" src="pip.webp" alt="Pip the penguin" draggable="false">
+    <h1 class="logo">Pip</h1>
+    <p class="tagline">your fluffy little penguin</p>
     <div class="bar"><div class="bar-fill" id="barFill"></div></div>
-    <p class="loading-text" id="loadingText">Filling the puddle…</p>
+    <p class="loading-text" id="loadingText">Fluffing feathers…</p>
     <button class="btn big" id="playBtn" hidden>Play</button>
   </div>
 </section>
@@ -57,46 +50,41 @@
     <div id="petWrap">
       <div id="thought" hidden></div>
       <div id="zzz" hidden><span>z</span><span>z</span><span>Z</span></div>
-      <svg id="pet" viewBox="0 0 200 200" aria-label="Puddle, your pet">
-        <defs>
-          <radialGradient id="shine" cx="34%" cy="32%" r="70%">
-            <stop offset="0" stop-color="#fff" stop-opacity=".6"/>
-            <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
-          </radialGradient>
-          <clipPath id="bodyClip">
-            <path d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z"/>
-          </clipPath>
-        </defs>
-        <ellipse class="shadow" cx="100" cy="193" rx="58" ry="7"/>
-        <g id="petBody">
-          <g id="sprout">
-            <path d="M100 22 Q97 12 101 4" stroke="#3c9a6e" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M101 8 Q113 -3 124 5 Q113 16 101 8Z" fill="#59c48a"/>
-          </g>
-          <path id="body" d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z"/>
-          <path d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z" fill="url(#shine)" pointer-events="none"/>
-          <g id="dirt" clip-path="url(#bodyClip)" pointer-events="none">
-            <circle cx="58" cy="100" r="9"/><circle cx="66" cy="112" r="5"/>
-            <circle cx="142" cy="158" r="10"/><circle cx="132" cy="168" r="5"/>
-            <circle cx="118" cy="70" r="6"/><circle cx="48" cy="160" r="7"/>
-            <circle cx="152" cy="108" r="5"/><circle cx="90" cy="176" r="6"/>
-          </g>
-          <g id="cheeks" pointer-events="none">
-            <ellipse cx="60" cy="143" rx="11" ry="6"/><ellipse cx="140" cy="143" rx="11" ry="6"/>
-          </g>
-          <g id="eyes" pointer-events="none">
-            <g class="eye"><circle cx="76" cy="122" r="15" fill="#fff"/><circle id="pupilL" cx="78" cy="124" r="7" class="pupil"/><circle id="glintL" cx="81" cy="120" r="2.4" fill="#fff"/></g>
-            <g class="eye"><circle cx="124" cy="122" r="15" fill="#fff"/><circle id="pupilR" cx="126" cy="124" r="7" class="pupil"/><circle id="glintR" cx="129" cy="120" r="2.4" fill="#fff"/></g>
-          </g>
-          <g id="closedEyes" pointer-events="none">
-            <path d="M64 124 Q76 132 88 124"/><path d="M112 124 Q124 132 136 124"/>
-          </g>
-          <path id="mouth" d="M86 150 Q100 164 114 150" pointer-events="none"/>
-          <ellipse id="mouthOpen" cx="100" cy="155" rx="10" ry="9" pointer-events="none"/>
-          <g id="bubbles" pointer-events="none"></g>
-          <g id="hat" pointer-events="none"></g>
-        </g>
-      </svg>
+      <div id="pet" aria-label="Pip, your penguin">
+        <div id="petBody">
+          <div id="petTilt">
+            <img id="petImg" src="pip.webp" alt="" draggable="false">
+            <svg id="petFx" viewBox="0 0 551 669" aria-hidden="true">
+              <defs>
+                <mask id="furMask" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="551" height="669">
+                  <image href="pip.webp" x="0" y="0" width="551" height="669"/>
+                </mask>
+                <filter id="softEdge" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter>
+              </defs>
+              <g id="dirt" mask="url(#furMask)">
+                <g filter="url(#softEdge)">
+                  <ellipse cx="190" cy="470" rx="26" ry="20"/><ellipse cx="228" cy="500" rx="13" ry="10"/>
+                  <ellipse cx="360" cy="560" rx="30" ry="22"/><ellipse cx="330" cy="590" rx="12" ry="9"/>
+                  <ellipse cx="150" cy="150" rx="20" ry="16"/><ellipse cx="400" cy="420" rx="16" ry="13"/>
+                  <ellipse cx="90" cy="400" rx="18" ry="14"/><ellipse cx="480" cy="330" rx="15" ry="12"/>
+                  <ellipse cx="300" cy="120" rx="14" ry="11"/>
+                </g>
+              </g>
+              <g id="lids">
+                <g filter="url(#softEdge)">
+                  <ellipse cx="270" cy="219" rx="47" ry="43" fill="#e9e7ed"/>
+                  <ellipse cx="421" cy="220" rx="27" ry="40" fill="#efe9e3"/>
+                </g>
+                <path d="M232 226 Q270 250 308 226" fill="none" stroke="#2b2836" stroke-width="6" stroke-linecap="round"/>
+                <path d="M404 224 Q421 242 438 222" fill="none" stroke="#2b2836" stroke-width="5" stroke-linecap="round"/>
+              </g>
+              <circle id="beakPt" cx="362" cy="262" r="3" fill="none"/>
+              <g id="bubbles" mask="url(#furMask)"></g>
+              <g id="hat"></g>
+            </svg>
+          </div>
+        </div>
+      </div>
       <div id="shower" hidden></div>
     </div>
 

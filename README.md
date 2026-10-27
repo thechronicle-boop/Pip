@@ -1,6 +1,6 @@
-# Puddle 💧
+# Pip 🐧
 
-A little jelly-drop virtual pet that lives in the browser. Feed it, bathe it, tuck it in, dress it up and play mini-games to earn coins.
+A fluffy baby penguin that lives in the browser. Feed Pip, bathe Pip, tuck Pip in, dress Pip up and play mini-games to earn coins.
 
 Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in the browser.
 
@@ -8,34 +8,34 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 
 - **Loading screen** with a Play button into the home screen
 - **4 needs**: hunger, clean, energy, fun. They drop over time, even while the page is closed
-- **Kitchen**: tap food from the fridge and it flies into Puddle's mouth
+- **Kitchen**: tap food from the fridge (fish and shrimp are Pip's favourites) and it flies to Pip's beak
 - **Shop**: buy food with coins
-- **Bathroom**: scrub with the sponge to make bubbles, then rinse. Puddle gets grubby spots when dirty
-- **Bedroom**: lights off to sleep, energy refills, Puddle wakes up when full
-- **Playroom**: two mini-games, *Star Catch* (catch stars, dodge storm clouds) and *Bounce* (tap to keep Puddle in the air)
-- **Closet**: 7 body colours and 8 accessories to unlock
-- Tap Puddle for giggles, eyes follow your cursor or finger, levels and XP, a daily coin gift, sound effects (with mute)
+- **Bathroom**: scrub with the sponge to make bubbles, then rinse. Pip gets grubby spots when dirty
+- **Bedroom**: lights off and Pip closes its eyes to sleep, energy refills, Pip wakes up when full
+- **Playroom**: two mini-games, *Star Catch* (catch stars, dodge storm clouds) and *Bounce* (tap to keep Pip in the air)
+- **Closet**: 8 accessories to unlock
+- Tap Pip for giggles, Pip leans toward your cursor or finger, blinks, droops when a need is very low, levels and XP, a daily coin gift, sound effects (with mute)
 
 ## Files
 
 | File | What it does |
 | --- | --- |
-| `index.html` | The page layout and Puddle's drawing (SVG) |
-| `style.css` | All the looks. Main colours are at the top in `:root` |
+| `index.html` | The page layout |
+| `style.css` | All the looks and animations |
 | `game.js` | Everything that happens |
+| `pip.webp` | Pip's picture (551 × 669, transparent background) |
+| `wrangler.jsonc`, `.assetsignore` | Tell Cloudflare to publish the site as plain files |
 
-## Easy changes (all near the top of `game.js`)
+## Easy changes
 
-- **Foods**: edit `FOODS`. `h` = hunger filled, `f` = fun, `en` = energy, `price` = coins
-- **Colours**: edit `COLORS` (add one like `mint: { n: 'Mint', c: '#7fe0c3', price: 0 }`)
-- **Accessories**: edit `HATS`. Each one is a bit of SVG drawn on a 200×200 canvas (Puddle's tip is at x=100, y=22)
+- **Foods**: edit `FOODS` near the top of `game.js`. `h` = hunger filled, `f` = fun, `en` = energy, `price` = coins
+- **Accessories**: edit `HATS` in `game.js`. Each one is SVG drawn over Pip's picture in its 551 × 669 space (left eye about 270, 219; right eye about 421, 220; top of the head about 280, 10)
 - **How fast needs drop**: `RATES` (per minute while open) and `OFFLINE` (per hour while closed)
 - **Starting coins and food**: the `fresh()` function
+- **New look for Pip**: replace `pip.webp` with another 551 × 669 picture with a transparent background. If the eyes move, update the eyelid ellipses (`#lids`) and beak point (`#beakPt`) in `index.html`
 
-After changing anything, refresh the page. To reset a save, open the browser console and run `localStorage.removeItem('puddle-save-v1')`.
+After changing anything, refresh the page. To reset a save, open the browser console and run `localStorage.removeItem('pip-save-v1')`.
 
-## Putting it online (GitHub Pages)
+## Hosting
 
-1. In the repo, go to **Settings → Pages**
-2. Under *Build and deployment*, pick **Deploy from a branch**, branch **main**, folder **/ (root)**, then **Save**
-3. After a minute the game is live at `https://<your-username>.github.io/<repo-name>/`
+The repo is set up for Cloudflare (Workers & Pages) and also works on GitHub Pages as-is. Every push to `main` redeploys.
