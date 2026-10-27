@@ -5,9 +5,11 @@
    Easy things to change:
    - FOODS   : foods in the shop/fridge (emoji, how much they fill, price)
    - HATS    : accessories in the closet (SVG drawn over Pip's picture,
-               which is 551 x 669: eyes at ~270,219 and ~421,220)
+               which is 792 x 893: eyes at ~294,237 and ~505,236,
+               top of the head at ~396,14)
    - RATES   : how fast stats go down
    Pip's picture is pip.webp. Swap it for another of the same size to restyle.
+   ROOMS   : the order you walk through with the arrows
    =========================================================== */
 (() => {
   'use strict';
@@ -17,7 +19,7 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const rnd = (a, b) => a + Math.random() * (b - a);
   const SAVE_KEY = 'pip-save-v1';
-  const PIP_W = 551, PIP_H = 669;
+  const PIP_W = 792, PIP_H = 893;
 
   // ---------- content ----------
   const FOODS = {
@@ -35,26 +37,26 @@
     cake:     { e: '🍰', n: 'Cake',      h: 20, f: 18, price: 40 },
   };
 
-  // Each accessory is SVG in Pip's picture coordinates (551 x 669).
-  // `box` is the area shown as the little preview in the closet.
+  // Each accessory is SVG in Pip's picture coordinates (792 x 893).
+  // `box` is the area shown as the little preview in the wardrobe.
   const HATS = {
     none:   { n: 'None', price: 0, svg: '', box: '0 0 10 10' },
-    party:  { n: 'Party hat', price: 60, box: '200 -90 160 170', svg:
-      '<g transform="rotate(-6 285 70)"><polygon points="226,74 334,74 280,-76" fill="#ff6fa8"/><path d="M242 34 L318 34 M258 -6 L302 -6" stroke="#fff" stroke-width="10"/><circle cx="280" cy="-74" r="17" fill="#ffd34d"/></g>' },
-    bow:    { n: 'Bow', price: 80, box: '330 30 140 110', svg:
-      '<g transform="translate(398 86) rotate(22)"><path d="M0 0 L-58 -34 Q-66 0 -58 34Z" fill="#ff5c8a"/><path d="M0 0 L58 -34 Q66 0 58 34Z" fill="#ff5c8a"/><circle r="15" fill="#ff8fb0"/></g>' },
-    flower: { n: 'Flower', price: 90, box: '110 40 110 110', svg:
-      '<g transform="translate(164 96)"><circle cx="0" cy="-26" r="20" fill="#ffb3d1"/><circle cx="25" cy="-8" r="20" fill="#ffb3d1"/><circle cx="16" cy="21" r="20" fill="#ffb3d1"/><circle cx="-16" cy="21" r="20" fill="#ffb3d1"/><circle cx="-25" cy="-8" r="20" fill="#ffb3d1"/><circle r="15" fill="#ffc93d"/></g>' },
-    beanie: { n: 'Beanie', price: 140, box: '130 -60 300 200', svg:
-      '<g transform="rotate(-5 285 70)"><path d="M150 112 Q146 -30 285 -34 Q424 -30 420 112Z" fill="#ff7a59"/><path d="M190 30 Q190 -6 230 -18 M240 -26 Q236 6 240 40 M330 -26 Q334 6 330 40 M380 30 Q380 -6 340 -18" stroke="#e85d3f" stroke-width="8" fill="none" stroke-linecap="round"/><rect x="138" y="88" width="294" height="44" rx="22" fill="#e85d3f"/><circle cx="285" cy="-44" r="30" fill="#fff"/></g>' },
-    cap:    { n: 'Cap', price: 160, box: '140 -30 330 160', svg:
-      '<g transform="rotate(-5 285 70)"><path d="M156 112 Q152 -14 285 -18 Q418 -14 414 112Z" fill="#4f7cff"/><path d="M380 104 Q470 96 492 126 L380 124Z" fill="#3a5fd6"/><circle cx="285" cy="-16" r="11" fill="#3a5fd6"/></g>' },
-    shades: { n: 'Shades', price: 220, box: '200 170 270 100', svg:
-      '<rect x="214" y="182" width="114" height="74" rx="30" fill="#1f1a2e" opacity=".94"/><rect x="392" y="182" width="62" height="74" rx="22" fill="#1f1a2e" opacity=".94"/><path d="M328 204 Q362 192 392 204" stroke="#1f1a2e" stroke-width="10" fill="none"/><path d="M232 202 L262 196" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"/><path d="M404 202 L420 198" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".55"/>' },
-    headphones: { n: 'Headphones', price: 260, box: '80 -40 400 300', svg:
-      '<path d="M130 190 Q104 -30 290 -26 Q470 -22 444 182" stroke="#2b2140" stroke-width="22" fill="none" stroke-linecap="round"/><rect x="96" y="150" width="62" height="104" rx="26" fill="#ff5c8a"/><rect x="420" y="140" width="52" height="98" rx="22" fill="#ff5c8a"/>' },
-    crown:  { n: 'Crown', price: 500, box: '180 -70 210 150', svg:
-      '<g transform="rotate(-6 285 60)"><path d="M210 70 L218 -18 L252 22 L285 -42 L318 22 L352 -18 L360 70Z" fill="#ffd34d" stroke="#e0a800" stroke-width="8" stroke-linejoin="round"/><circle cx="285" cy="44" r="11" fill="#ff5c8a"/><circle cx="246" cy="50" r="8" fill="#4f7cff"/><circle cx="324" cy="50" r="8" fill="#4f7cff"/></g>' },
+    party:  { n: 'Party hat', price: 60, box: '300 -110 192 220', svg:
+      '<polygon points="326,104 466,104 396,-84" fill="#ff6fa8" stroke="#2b2140" stroke-width="7" stroke-linejoin="round"/><path d="M346 56 L446 56 M366 6 L426 6" stroke="#fff" stroke-width="13"/><circle cx="396" cy="-84" r="22" fill="#ffd34d" stroke="#2b2140" stroke-width="6"/>' },
+    bow:    { n: 'Bow', price: 80, box: '470 40 190 160', svg:
+      '<g transform="translate(566 118) rotate(18)"><path d="M0 0 L-80 -46 Q-92 0 -80 46Z" fill="#ff5c8a" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/><path d="M0 0 L80 -46 Q92 0 80 46Z" fill="#ff5c8a" stroke="#2b2140" stroke-width="6" stroke-linejoin="round"/><circle r="20" fill="#ff8fb0" stroke="#2b2140" stroke-width="6"/></g>' },
+    flower: { n: 'Flower', price: 90, box: '150 50 150 150', svg:
+      '<g transform="translate(226 126)" stroke="#2b2140" stroke-width="5"><circle cx="0" cy="-34" r="26" fill="#ffb3d1"/><circle cx="32" cy="-10" r="26" fill="#ffb3d1"/><circle cx="20" cy="28" r="26" fill="#ffb3d1"/><circle cx="-20" cy="28" r="26" fill="#ffb3d1"/><circle cx="-32" cy="-10" r="26" fill="#ffb3d1"/><circle r="20" fill="#ffc93d"/></g>' },
+    beanie: { n: 'Beanie', price: 140, box: '180 -100 432 280', svg:
+      '<g stroke="#2b2140" stroke-width="7" stroke-linejoin="round"><path d="M206 146 Q198 -44 396 -48 Q594 -44 586 146Z" fill="#ff7a59"/><path d="M276 30 Q276 -10 316 -26 M356 -40 V100 M436 -40 V100 M516 30 Q516 -10 476 -26" fill="none" stroke="#e85d3f" stroke-width="11" stroke-linecap="round"/><rect x="190" y="112" width="412" height="58" rx="29" fill="#e85d3f"/><circle cx="396" cy="-60" r="40" fill="#fff"/></g>' },
+    cap:    { n: 'Cap', price: 160, box: '180 -60 432 240', svg:
+      '<g stroke="#2b2140" stroke-width="7" stroke-linejoin="round"><path d="M214 140 Q210 -30 396 -34 Q582 -30 578 140Z" fill="#4f7cff"/><path d="M396 -34 V140" fill="none" stroke="#3a5fd6" stroke-width="6"/><ellipse cx="396" cy="146" rx="230" ry="34" fill="#3a5fd6"/><circle cx="396" cy="-34" r="15" fill="#3a5fd6"/></g>' },
+    shades: { n: 'Shades', price: 220, box: '220 180 352 120', svg:
+      '<g stroke="#2b2140" stroke-width="6"><rect x="234" y="192" width="122" height="92" rx="38" fill="#1f1a2e" opacity=".95"/><rect x="444" y="192" width="122" height="92" rx="38" fill="#1f1a2e" opacity=".95"/><path d="M356 222 Q400 202 444 222" fill="none" stroke-width="12"/></g><path d="M256 218 L296 208 M466 218 L506 208" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".55"/>' },
+    headphones: { n: 'Headphones', price: 260, box: '130 -80 532 430', svg:
+      '<path d="M186 262 Q150 -64 396 -60 Q642 -64 606 262" stroke="#2b2140" stroke-width="30" fill="none" stroke-linecap="round"/><g stroke="#2b2140" stroke-width="7"><rect x="140" y="206" width="78" height="138" rx="32" fill="#ff5c8a"/><rect x="574" y="206" width="78" height="138" rx="32" fill="#ff5c8a"/></g>' },
+    crown:  { n: 'Crown', price: 500, box: '280 -80 232 200', svg:
+      '<path d="M300 100 L310 -16 L354 36 L396 -52 L438 36 L482 -16 L492 100Z" fill="#ffd34d" stroke="#2b2140" stroke-width="8" stroke-linejoin="round"/><circle cx="396" cy="66" r="15" fill="#ff5c8a" stroke="#2b2140" stroke-width="5"/><circle cx="342" cy="74" r="10" fill="#4f7cff" stroke="#2b2140" stroke-width="4"/><circle cx="450" cy="74" r="10" fill="#4f7cff" stroke="#2b2140" stroke-width="4"/>' },
   };
 
   // per-minute change while the game is open
@@ -63,7 +65,9 @@
   const OFFLINE = { hunger: -6, clean: -4, energy: -5, fun: -5, sleepEnergy: 40 };
 
   const STAT_ICON = { hunger: '🍎', clean: '🛁', energy: '🌙', fun: '🎮' };
-  const ROOM_NAMES = { kitchen: 'Kitchen', bath: 'Bathroom', bed: 'Bedroom', play: 'Playroom', closet: 'Closet', shop: 'Shop' };
+  const ROOMS = ['kitchen', 'bath', 'bed', 'play', 'closet'];
+  const ROOM_NAMES = { kitchen: 'Kitchen', bath: 'Bathroom', bed: 'Bedroom', play: 'Games', closet: 'Wardrobe' };
+  const ROOM_TINT = { kitchen: '#ffd9a0', bath: '#cdeefd', bed: '#d8c8ff', play: '#c6f0bd', closet: '#ffd2e6' };
 
   // ---------- save / load ----------
   const fresh = () => ({
@@ -227,13 +231,14 @@
   }
 
   function renderHud() {
-    for (const el of $$('.meter')) {
+    for (const el of $$('.need')) {
       const v = Math.round(S.stats[el.dataset.stat]);
       el.style.setProperty('--v', v);
       el.style.setProperty('--c', v > 50 ? 'var(--good)' : v > 25 ? 'var(--ok)' : 'var(--bad)');
       el.classList.toggle('low', v <= 20);
       el.title = `${el.title.split(':')[0]}: ${v}%`;
     }
+    $('#sheetCoins').textContent = Math.floor(S.coins);
     $('#coinNum').textContent = Math.floor(S.coins);
     $('#levelNum').textContent = S.level;
     $('#xpFill').style.width = (S.xp / xpNeed()) * 100 + '%';
@@ -264,58 +269,90 @@
 
   // ---------- rooms ----------
   let room = 'kitchen';
-  let bathTool = 'sponge';
+  let bathTool = 'soap';
+  let foodIdx = 0;
+  let sheet = null; // 'shop' | 'closet' | 'games' | null
+  const CHEV_L = '<svg viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20"/></svg>';
+  const CHEV_R = '<svg viewBox="0 0 24 24"><path d="M9 4 L17 12 L9 20"/></svg>';
 
   function setRoom(r) {
     if (room === 'bed' && r !== 'bed' && S.asleep) wake(true);
     room = r;
     $('#room').dataset.room = r;
     $('#roomTitle').textContent = ROOM_NAMES[r];
-    $$('#roomNav button').forEach((b) => b.classList.toggle('on', b.dataset.room === r));
     $('#room').classList.toggle('dark', r === 'bed' && S.asleep);
     $('#sponge').hidden = true;
+    $('meta[name="theme-color"]').setAttribute('content', ROOM_TINT[r]);
     renderPanel();
   }
+  function stepRoom(dir) {
+    const i = ROOMS.indexOf(room);
+    SFX.tap();
+    setRoom(ROOMS[(i + dir + ROOMS.length) % ROOMS.length]);
+  }
+  const ownedFoods = () => Object.keys(FOODS).filter((k) => S.food[k] > 0);
 
-  function renderPanel() {
-    const p = $('#panel');
+  // the round buttons in the middle of the bottom bar
+  function renderControls() {
+    const c = $('#controls');
     if (room === 'kitchen') {
-      const owned = Object.keys(FOODS).filter((k) => S.food[k] > 0);
-      p.innerHTML = `<h3>Fridge <button class="btn small" data-go="shop">🛒 Shop</button></h3>` +
-        (owned.length
-          ? `<div class="chips">${owned.map((k) => `<button class="chip" data-feed="${k}"><span class="e">${FOODS[k].e}</span><span class="count">×${S.food[k]}</span></button>`).join('')}</div><p class="hint">Tap a food to feed Pip</p>`
-          : `<p class="hint">The fridge is empty. Grab some food in the shop!</p>`);
-    } else if (room === 'shop') {
-      p.innerHTML = `<h3>Food shop <span class="pill">🪙 ${Math.floor(S.coins)}</span></h3><div class="grid">` +
-        Object.entries(FOODS).map(([k, f]) => `<button class="item" data-buyfood="${k}"><span class="e">${f.e}</span><span class="name">${f.n}</span><span class="price">🪙 ${f.price}</span><span class="owned">have ${S.food[k] || 0}</span></button>`).join('') +
-        `</div>`;
+      const owned = ownedFoods();
+      if (!owned.length) {
+        c.innerHTML = `<button class="act yellow" data-sheet="shop">🛒<small>Buy food</small></button>`;
+        return;
+      }
+      foodIdx = ((foodIdx % owned.length) + owned.length) % owned.length;
+      const k = owned[foodIdx];
+      c.innerHTML = `<button class="mini" data-fprev aria-label="Previous food">${CHEV_L}</button>
+        <button class="act food-big" data-feed="${k}" aria-label="${FOODS[k].n}"><span class="e">${FOODS[k].e}</span><span class="count">${S.food[k]}</span><small>${FOODS[k].n}</small></button>
+        <button class="mini" data-fnext aria-label="Next food">${CHEV_R}</button>`;
     } else if (room === 'bath') {
-      p.innerHTML = `<div class="row"><button class="tool ${bathTool === 'sponge' ? 'on' : ''}" data-tool="sponge"><span>🧽</span>Sponge</button><button class="tool" data-shower><span>🚿</span>Rinse</button></div><p class="hint" style="margin-top:8px">${bathTool === 'sponge' ? 'Rub Pip with the sponge, then rinse' : 'Pick the sponge to scrub'}</p>`;
+      c.innerHTML = `<button class="act ${bathTool === 'soap' ? 'on' : ''}" data-tool>🧼<small>Soap</small></button>
+        <button class="act" data-shower>🚿<small>Rinse</small></button>`;
     } else if (room === 'bed') {
-      p.innerHTML = `<div class="row"><button class="btn ${S.asleep ? 'ghost' : ''}" data-lamp>${S.asleep ? '💡 Lights on' : '🌙 Lights off'}</button></div><p class="hint" style="margin-top:8px">${S.asleep ? 'Pip is snoozing… energy is filling up' : 'Turn the lights off so Pip can sleep'}</p>`;
+      c.innerHTML = `<button class="act ${S.asleep ? '' : 'yellow'}" data-lamp>${S.asleep ? '🌙' : '💡'}<small>${S.asleep ? 'Wake up' : 'Lights off'}</small></button>`;
     } else if (room === 'play') {
-      p.innerHTML = `<div class="games">
-        <button class="game-card catch" data-game="catch"><span class="e">⭐</span><b>Star Catch</b><small>Best ${S.best.catch} · dodge the storm clouds</small></button>
-        <button class="game-card bounce" data-game="bounce"><span class="e">🐧</span><b>Bounce</b><small>Best ${S.best.bounce} · keep Pip in the air</small></button>
-      </div>`;
+      c.innerHTML = `<button class="act pink" data-sheet="games">🎮<small>Play</small></button>`;
     } else if (room === 'closet') {
-      const grid = Object.entries(HATS).map(([k, h]) => {
-        const own = S.ownedHats.includes(k);
-        const prev = k === 'none' ? '<span class="e">🐧</span>' : `<svg viewBox="${h.box}">${h.svg}</svg>`;
-        return `<button class="item ${S.hat === k ? 'on' : ''}" data-hat="${k}">${prev}<span class="name">${h.n}</span>${own ? `<span class="owned">${S.hat === k ? 'wearing' : 'owned'}</span>` : `<span class="price">🪙 ${h.price}</span>`}</button>`;
-      }).join('');
-      p.innerHTML = `<h3>Accessories <span class="pill">🪙 ${Math.floor(S.coins)}</span></h3><div class="grid">${grid}</div>`;
+      c.innerHTML = `<button class="act pink" data-sheet="closet">👕<small>Dress up</small></button>`;
     }
   }
 
+  function openSheet(kind) { sheet = kind; SFX.pop(); renderSheet(); $('#sheet').hidden = false; }
+  function closeSheet() { sheet = null; $('#sheet').hidden = true; }
+  function renderSheet() {
+    if (!sheet) return;
+    const body = $('#sheetBody');
+    $('#sheetCoins').textContent = Math.floor(S.coins);
+    if (sheet === 'shop') {
+      $('#sheetTitle').textContent = 'Food shop';
+      body.innerHTML = '<div class="grid">' + Object.entries(FOODS).map(([k, f]) =>
+        `<button class="item" data-buyfood="${k}"><span class="e">${f.e}</span><span class="name">${f.n}</span><span class="price">🪙 ${f.price}</span><span class="owned">have ${S.food[k] || 0}</span></button>`).join('') + '</div>';
+    } else if (sheet === 'closet') {
+      $('#sheetTitle').textContent = 'Wardrobe';
+      body.innerHTML = '<div class="grid">' + Object.entries(HATS).map(([k, h]) => {
+        const own = S.ownedHats.includes(k);
+        const prev = k === 'none' ? '<span class="e">🐧</span>' : `<svg viewBox="${h.box}">${h.svg}</svg>`;
+        return `<button class="item ${S.hat === k ? 'on' : ''}" data-hat="${k}">${prev}<span class="name">${h.n}</span>${own ? `<span class="owned">${S.hat === k ? 'wearing' : 'owned'}</span>` : `<span class="price">🪙 ${h.price}</span>`}</button>`;
+      }).join('') + '</div>';
+    } else if (sheet === 'games') {
+      $('#sheetTitle').textContent = 'Games';
+      body.innerHTML = `<div class="games">
+        <button class="game-card catch" data-game="catch"><span class="e">⭐</span><b>Star Catch</b><small>Best ${S.best.catch} · dodge the storm clouds</small></button>
+        <button class="game-card bounce" data-game="bounce"><span class="e">🐧</span><b>Bounce</b><small>Best ${S.best.bounce} · keep Pip in the air</small></button>
+      </div>`;
+    }
+  }
+  function renderPanel() { renderControls(); renderSheet(); }
+
   // ---------- actions ----------
-  function feed(key, chip) {
+  function feed(key, chip, fromXY) {
     if (S.asleep) return toast('Shh… Pip is asleep');
     if (!S.food[key]) return;
     if (S.stats.hunger >= 97) { SFX.nope(); petClass('shake', 500); return toast("I'm full!"); }
     S.food[key]--;
     const f = FOODS[key];
-    const a = chip.getBoundingClientRect();
+    const a = chip ? chip.getBoundingClientRect() : { left: fromXY[0], top: fromXY[1], width: 0, height: 0 };
     const m = $('#beakPt').getBoundingClientRect();
     const tx = m.left + m.width / 2, ty = m.top + m.height / 2;
     const fly = document.createElement('div');
@@ -392,16 +429,16 @@
     x = Math.round(x); y = Math.round(y);
     if (x < 0 || y < 0 || x >= PIP_W || y >= PIP_H) return false;
     if (alphaMap) return alphaMap[y * PIP_W + x] > 120;
-    return ((x - 275) / 250) ** 2 + ((y - 345) / 320) ** 2 < 1;
+    return ((x - 396) / 380) ** 2 + ((y - 450) / 440) ** 2 < 1;
   }
   function addBubble(x, y) {
     const g = $('#bubbles');
     if (g.childElementCount > 70) g.firstElementChild.remove();
     const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    c.setAttribute('cx', x + rnd(-16, 16)); c.setAttribute('cy', y + rnd(-16, 16));
-    c.setAttribute('r', rnd(13, 30).toFixed(1));
+    c.setAttribute('cx', x + rnd(-22, 22)); c.setAttribute('cy', y + rnd(-22, 22));
+    c.setAttribute('r', rnd(18, 40).toFixed(1));
     c.setAttribute('fill', 'rgba(255,255,255,.88)');
-    c.setAttribute('stroke', '#b9e6fb'); c.setAttribute('stroke-width', '3');
+    c.setAttribute('stroke', '#9fd6f5'); c.setAttribute('stroke-width', '4');
     g.append(c);
   }
   function scrubAt(e) {
@@ -437,7 +474,7 @@
     const sponge = $('#sponge');
     pet.addEventListener('pointerdown', (e) => {
       ac();
-      if (room === 'bath' && bathTool === 'sponge' && !S.asleep) {
+      if (room === 'bath' && bathTool === 'soap' && !S.asleep) {
         scrubbing = true; pet.setPointerCapture(e.pointerId);
         sponge.hidden = false; sponge.style.left = e.clientX + 'px'; sponge.style.top = e.clientY + 'px';
         scrubAt(e); return;
@@ -463,25 +500,81 @@
     pet.addEventListener('pointercancel', end);
   }
 
-  function bindPanel() {
-    $('#panel').addEventListener('click', (e) => {
-      const t = e.target.closest('button'); if (!t) return;
+  // drag food from the bottom bar onto Pip (a plain tap feeds too)
+  function bindFoodDrag() {
+    const ghost = $('#dragFood');
+    let drag = null;
+    $('#controls').addEventListener('pointerdown', (e) => {
+      const b = e.target.closest('.food-big'); if (!b) return;
       ac();
-      const d = t.dataset;
-      if (d.feed) feed(d.feed, t);
-      else if (d.go) { SFX.tap(); setRoom(d.go); }
-      else if (d.buyfood) buyFood(d.buyfood);
-      else if (d.tool) { bathTool = bathTool === 'sponge' ? 'none' : 'sponge'; SFX.tap(); renderPanel(); }
-      else if ('shower' in d) rinse();
-      else if ('lamp' in d) toggleLamp();
-      else if (d.game) startGame(d.game);
-      else if (d.hat) pickHat(d.hat);
+      drag = { key: b.dataset.feed, el: b, x0: e.clientX, y0: e.clientY, moved: false };
+      b.setPointerCapture(e.pointerId);
     });
-    $('#roomNav').addEventListener('click', (e) => {
-      const b = e.target.closest('button'); if (!b) return;
-      ac(); SFX.tap(); setRoom(b.dataset.room);
+    $('#controls').addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) > 10) {
+        drag.moved = true; ghost.textContent = FOODS[drag.key].e; ghost.hidden = false; drag.el.classList.add('dragging');
+      }
+      if (drag.moved) {
+        ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
+        const r = $('#pet').getBoundingClientRect();
+        $('#pet').classList.toggle('target', e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom);
+      }
     });
+    const end = (e) => {
+      if (!drag) return;
+      const d = drag; drag = null;
+      ghost.hidden = true; d.el.classList.remove('dragging'); $('#pet').classList.remove('target');
+      if (!d.moved) return feed(d.key, d.el);
+      const r = $('#pet').getBoundingClientRect();
+      if (e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom) feed(d.key, null, [e.clientX, e.clientY]);
+      else SFX.tap();
+    };
+    $('#controls').addEventListener('pointerup', end);
+    $('#controls').addEventListener('pointercancel', end);
+  }
+
+  function handleButton(t) {
+    ac();
+    const d = t.dataset;
+    if (d.feed) return; // handled by the drag code
+    if ('fprev' in d) { foodIdx--; SFX.tap(); renderControls(); }
+    else if ('fnext' in d) { foodIdx++; SFX.tap(); renderControls(); }
+    else if (d.sheet) openSheet(d.sheet);
+    else if (d.buyfood) buyFood(d.buyfood);
+    else if ('tool' in d) { bathTool = bathTool === 'soap' ? 'none' : 'soap'; SFX.tap(); renderControls(); }
+    else if ('shower' in d) rinse();
+    else if ('lamp' in d) toggleLamp();
+    else if (d.game) { closeSheet(); startGame(d.game); }
+    else if (d.hat) pickHat(d.hat);
+  }
+  function bindPanel() {
+    $('#controls').addEventListener('click', (e) => { const t = e.target.closest('button'); if (t) handleButton(t); });
+    $('#sheetBody').addEventListener('click', (e) => { const t = e.target.closest('button'); if (t) handleButton(t); });
+    $('#sheet').addEventListener('click', (e) => { if (e.target.id === 'sheet') { SFX.tap(); closeSheet(); } });
+    $('#sheetClose').addEventListener('click', () => { SFX.tap(); closeSheet(); });
+    $('#prevRoom').addEventListener('click', () => { ac(); stepRoom(-1); });
+    $('#nextRoom').addEventListener('click', () => { ac(); stepRoom(1); });
+    $('#shopBtn').addEventListener('click', () => { ac(); openSheet('shop'); });
     $('#muteBtn').addEventListener('click', () => { S.muted = !S.muted; renderHud(); save(); if (!S.muted) SFX.tap(); });
+    window.addEventListener('keydown', (e) => {
+      if (G.running || !$('#modal').hidden) return;
+      if (e.key === 'Escape') closeSheet();
+      if (sheet) return;
+      if (e.key === 'ArrowLeft') stepRoom(-1);
+      if (e.key === 'ArrowRight') stepRoom(1);
+    });
+    // swipe left / right on the room to walk between rooms
+    let sw = null;
+    $('#room').addEventListener('pointerdown', (e) => {
+      if (e.target.closest('#pet, .bottombar, .hud, button')) return;
+      sw = [e.clientX, e.clientY];
+    });
+    $('#room').addEventListener('pointerup', (e) => {
+      if (!sw) return;
+      const dx = e.clientX - sw[0], dy = e.clientY - sw[1]; sw = null;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) stepRoom(dx < 0 ? 1 : -1);
+    });
   }
 
   // ---------- game loop for stats ----------
@@ -748,7 +841,7 @@
   function init() {
     load(); applyOffline(); save();
     applyLook(); renderHud(); renderFace();
-    bindPet(); bindPanel();
+    bindPet(); bindPanel(); bindFoodDrag();
     blinkLoop();
     setInterval(tick, 1000);
     (function tiltLoop() { updateTilt(); requestAnimationFrame(tiltLoop); })();

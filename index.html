@@ -5,18 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Pip</title>
 <meta name="description" content="Pip: a fluffy baby penguin that lives in your browser. Feed it, bathe it, tuck it in and play games for coins.">
-<meta name="theme-color" content="#bcd3f0">
+<meta name="theme-color" content="#ffd9a0">
 <link rel="icon" href="pip.webp">
 <link rel="preload" as="image" href="pip.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- ============ LOADING SCREEN ============ -->
 <section id="loader" class="screen">
+  <div class="snow" aria-hidden="true"></div>
   <div class="loader-inner">
     <img class="loader-pet" src="pip.webp" alt="Pip the penguin" draggable="false">
     <h1 class="logo">Pip</h1>
@@ -29,24 +30,159 @@
 
 <!-- ============ MAIN APP ============ -->
 <div id="app" hidden>
-  <header class="hud">
-    <div class="meters">
-      <div class="meter" data-stat="hunger" title="Hunger"><span>🍎</span></div>
-      <div class="meter" data-stat="clean" title="Clean"><span>🫧</span></div>
-      <div class="meter" data-stat="energy" title="Energy"><span>🌙</span></div>
-      <div class="meter" data-stat="fun" title="Fun"><span>⭐</span></div>
-    </div>
-    <div class="hud-right">
-      <div class="pill" id="levelPill">Lv <b id="levelNum">1</b><i class="xp"><i id="xpFill"></i></i></div>
-      <div class="pill coins">🪙 <b id="coinNum">0</b></div>
-      <button class="icon-btn" id="muteBtn" aria-label="Sound on or off">🔊</button>
-    </div>
-  </header>
-
   <main id="room" data-room="kitchen">
-    <div class="room-deco" aria-hidden="true"></div>
-    <h2 class="room-title" id="roomTitle">Kitchen</h2>
 
+    <!-- ===== ROOM SCENES (all original art, drawn in SVG) ===== -->
+    <div class="scenes" aria-hidden="true">
+      <svg class="scene" data-scene="kitchen" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <pattern id="kWall" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#ffd9a0"/><rect width="20" height="40" fill="#ffe2b3"/></pattern>
+          <pattern id="kFloor" width="80" height="80" patternUnits="userSpaceOnUse"><rect width="80" height="80" fill="#f4b46a"/><rect width="40" height="40" fill="#ffd08f"/><rect x="40" y="40" width="40" height="40" fill="#ffd08f"/></pattern>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#c9ecff"/></linearGradient>
+        </defs>
+        <rect width="400" height="560" fill="url(#kWall)"/>
+        <rect y="560" width="400" height="240" fill="url(#kFloor)"/>
+        <rect y="548" width="400" height="16" fill="#e39a52" stroke="#2b2140" stroke-width="4"/>
+        <g stroke="#2b2140" stroke-width="4" stroke-linejoin="round">
+          <rect x="140" y="110" width="120" height="120" rx="14" fill="url(#sky)"/>
+          <path d="M200 110 V230 M140 170 H260" fill="none"/>
+          <path d="M156 150 q8 -12 20 -4 q10 -10 20 2 q10 2 6 12 h-42 q-8 -2 -4 -10Z" fill="#fff" stroke-width="3"/>
+          <rect x="130" y="226" width="140" height="12" rx="6" fill="#fff"/>
+          <rect x="16" y="300" width="100" height="262" rx="16" fill="#9fe3d6"/>
+          <path d="M16 392 H116" fill="none"/>
+          <rect x="96" y="322" width="8" height="48" rx="4" fill="#fff"/>
+          <rect x="96" y="410" width="8" height="78" rx="4" fill="#fff"/>
+          <circle cx="44" cy="340" r="8" fill="#ff6fa8" stroke-width="3"/>
+          <circle cx="64" cy="352" r="6" fill="#ffd34d" stroke-width="3"/>
+          <rect x="282" y="432" width="124" height="128" fill="#fff3df"/>
+          <rect x="276" y="418" width="136" height="20" rx="8" fill="#d98b4a"/>
+          <path d="M344 438 V560" fill="none"/>
+          <circle cx="332" cy="498" r="5" fill="#2b2140" stroke="none"/><circle cx="356" cy="498" r="5" fill="#2b2140" stroke="none"/>
+          <ellipse cx="330" cy="412" rx="38" ry="8" fill="#fff"/>
+          <path d="M308 404 q20 -20 42 0 l12 -8 v16 l-12 -8 q-22 20 -42 0Z" fill="#7cc0ff" stroke-width="3"/>
+        </g>
+      </svg>
+
+      <svg class="scene" data-scene="bath" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <pattern id="bWall" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#cdeefd"/><path d="M0 0.5 H40 M0.5 0 V40" stroke="#a9dcf3" stroke-width="3"/></pattern>
+          <pattern id="bFloor" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="#7fc3e6"/><path d="M0 0.5 H50 M0.5 0 V50" stroke="#6aaed3" stroke-width="3"/></pattern>
+        </defs>
+        <rect width="400" height="560" fill="url(#bWall)"/>
+        <rect y="560" width="400" height="240" fill="url(#bFloor)"/>
+        <rect y="548" width="400" height="16" fill="#5ea3cc" stroke="#2b2140" stroke-width="4"/>
+        <g stroke="#2b2140" stroke-width="4" stroke-linejoin="round">
+          <ellipse cx="80" cy="220" rx="48" ry="64" fill="#eaf8ff"/>
+          <path d="M60 190 q10 -18 26 -22" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+          <rect x="22" y="392" width="96" height="10" rx="5" fill="#fff"/>
+          <rect x="34" y="400" width="70" height="90" rx="10" fill="#ff9fc4"/>
+          <path d="M34 470 H104" fill="none" stroke="#ff7aa8"/>
+          <path d="M248 488 H412 V530 Q412 576 360 576 H300 Q248 576 248 530Z" fill="#fff"/>
+          <rect x="240" y="476" width="180" height="20" rx="10" fill="#fff"/>
+          <path d="M270 576 l-6 16 M392 576 l6 16" fill="none"/>
+          <path d="M392 476 V430 q0 -16 -18 -16 h-12" fill="none" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="282" cy="470" r="12" fill="#fff" stroke-width="3"/><circle cx="302" cy="464" r="15" fill="#fff" stroke-width="3"/><circle cx="326" cy="470" r="11" fill="#fff" stroke-width="3"/><circle cx="346" cy="466" r="13" fill="#fff" stroke-width="3"/>
+          <path d="M268 448 q0 -16 14 -16 q12 0 12 12 q8 0 8 8 q0 10 -16 10 h-12 q-6 0 -6 -14Z" fill="#ffd34d" stroke-width="3"/>
+          <path d="M296 440 l8 -2 -6 6Z" fill="#ff8a3a" stroke-width="2"/>
+        </g>
+      </svg>
+
+      <svg class="scene" data-scene="bed" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <pattern id="dWall" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="#d8c8ff"/><path d="M15 12 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3Z M45 42 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2Z" fill="#e7dcff"/></pattern>
+          <pattern id="dFloor" width="400" height="40" patternUnits="userSpaceOnUse"><rect width="400" height="40" fill="#b08ddb"/><path d="M0 39 H400 M90 0 V40 M250 0 V40" stroke="#9a78c7" stroke-width="3"/></pattern>
+          <radialGradient id="glow"><stop offset="0" stop-color="#fff3a6" stop-opacity=".9"/><stop offset="1" stop-color="#fff3a6" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="400" height="560" fill="url(#dWall)"/>
+        <rect y="560" width="400" height="240" fill="url(#dFloor)"/>
+        <rect y="548" width="400" height="16" fill="#8e6bc0" stroke="#2b2140" stroke-width="4"/>
+        <g stroke="#2b2140" stroke-width="4" stroke-linejoin="round">
+          <rect x="140" y="100" width="120" height="130" rx="60" fill="#2d2a6e"/>
+          <circle cx="222" cy="148" r="18" fill="#fff6c9" stroke-width="3"/>
+          <circle cx="230" cy="142" r="16" fill="#2d2a6e" stroke="none"/>
+          <circle cx="170" cy="140" r="3" fill="#fff" stroke="none"/><circle cx="190" cy="186" r="2.5" fill="#fff" stroke="none"/><circle cx="214" cy="200" r="2" fill="#fff" stroke="none"/>
+          <path d="M134 98 q-10 70 4 136 h24 q-12 -60 -4 -136Z M266 98 q10 70 -4 136 h-24 q12 -60 4 -136Z" fill="#ff9fc4"/>
+          <rect x="262" y="380" width="150" height="190" rx="34" fill="#ff9fc4"/>
+          <rect x="246" y="482" width="170" height="78" rx="22" fill="#fff"/>
+          <ellipse cx="320" cy="478" rx="44" ry="20" fill="#fff6ec"/>
+          <path d="M246 506 H416 V548 Q416 560 404 560 H258 Q246 560 246 548Z" fill="#8fb3ff"/>
+          <rect x="26" y="470" width="78" height="92" rx="10" fill="#c79a6b"/>
+          <path d="M26 512 H104" fill="none"/>
+          <rect x="60" y="430" width="10" height="42" fill="#fff"/>
+          <path d="M40 432 L50 392 H80 L90 432Z" fill="#ffe680" class="lampshade"/>
+        </g>
+        <circle class="lampglow" cx="65" cy="420" r="70" fill="url(#glow)"/>
+        <rect class="night" width="400" height="800" fill="#120c33"/>
+      </svg>
+
+      <svg class="scene" data-scene="play" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <pattern id="pWall" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="#c6f0bd"/><circle cx="12" cy="12" r="6" fill="#b2e6a6"/><circle cx="37" cy="37" r="6" fill="#b2e6a6"/></pattern>
+        </defs>
+        <rect width="400" height="560" fill="url(#pWall)"/>
+        <rect y="560" width="400" height="240" fill="#7fcf8a"/>
+        <rect y="548" width="400" height="16" fill="#5fb56c" stroke="#2b2140" stroke-width="4"/>
+        <g stroke="#2b2140" stroke-width="4" stroke-linejoin="round">
+          <ellipse cx="200" cy="690" rx="180" ry="56" fill="#ffcf5c"/>
+          <ellipse cx="200" cy="690" rx="120" ry="34" fill="#ffb03d"/>
+          <rect x="14" y="270" width="120" height="14" rx="6" fill="#c79a6b"/>
+          <rect x="24" y="234" width="34" height="36" rx="6" fill="#ff6fa8"/>
+          <rect x="62" y="244" width="26" height="26" rx="5" fill="#7cc0ff"/>
+          <circle cx="110" cy="252" r="18" fill="#ffd34d"/>
+          <path d="M96 246 q14 10 28 0" fill="none" stroke-width="3"/>
+          <rect x="282" y="320" width="112" height="242" rx="14" fill="#6b5cff"/>
+          <rect x="298" y="350" width="80" height="66" rx="8" fill="#1d1838"/>
+          <path d="M338 364 l5 11 12 2 -9 8 2 12 -10 -6 -10 6 2 -12 -9 -8 12 -2Z" fill="#ffd34d" stroke-width="2"/>
+          <rect x="294" y="432" width="88" height="30" rx="8" fill="#4b3fd6"/>
+          <circle cx="318" cy="447" r="8" fill="#ff5c8a" stroke-width="3"/><circle cx="356" cy="447" r="8" fill="#ffd34d" stroke-width="3"/>
+          <circle cx="58" cy="608" r="26" fill="#fff"/>
+          <path d="M58 586 l10 10 -4 12 h-12 l-4 -12Z" fill="#2b2140" stroke-width="2"/>
+        </g>
+      </svg>
+
+      <svg class="scene" data-scene="closet" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <pattern id="cWall" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#ffd2e6"/><rect width="14" height="40" fill="#ffe0ee"/></pattern>
+        </defs>
+        <rect width="400" height="560" fill="url(#cWall)"/>
+        <rect y="560" width="400" height="240" fill="#e7a2c4"/>
+        <rect y="548" width="400" height="16" fill="#d488ad" stroke="#2b2140" stroke-width="4"/>
+        <g stroke="#2b2140" stroke-width="4" stroke-linejoin="round">
+          <ellipse cx="200" cy="690" rx="170" ry="50" fill="#fff0f6"/>
+          <rect x="14" y="250" width="132" height="312" rx="14" fill="#fff4ea"/>
+          <path d="M80 250 V562" fill="none"/>
+          <path d="M8 252 q72 -34 144 0" fill="#ffb3d1"/>
+          <circle cx="70" cy="400" r="6" fill="#ffd34d" stroke-width="3"/><circle cx="90" cy="400" r="6" fill="#ffd34d" stroke-width="3"/>
+          <rect x="298" y="290" width="92" height="250" rx="46" fill="#eaf8ff"/>
+          <path d="M320 330 q10 -18 26 -22" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+          <path d="M310 540 l-10 22 M378 540 l10 22" fill="none"/>
+          <path d="M250 150 H390" fill="none" stroke-width="6" stroke-linecap="round"/>
+          <path d="M290 150 v8 l-20 16 h40Z M350 150 v8 l-20 16 h40Z" fill="none" stroke-width="3"/>
+          <rect x="272" y="176" width="36" height="46" rx="8" fill="#7cc0ff" stroke-width="3"/>
+          <rect x="332" y="176" width="36" height="46" rx="8" fill="#ffd34d" stroke-width="3"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- ===== TOP BAR ===== -->
+    <header class="hud">
+      <div class="needs">
+        <div class="need" data-stat="hunger" title="Hunger"><i></i><span>🍗</span></div>
+        <div class="need" data-stat="clean" title="Clean"><i></i><span>🧼</span></div>
+        <div class="need" data-stat="energy" title="Energy"><i></i><span>⚡</span></div>
+        <div class="need" data-stat="fun" title="Fun"><i></i><span>😄</span></div>
+      </div>
+      <div class="hud-right">
+        <div class="chip coins">🪙 <b id="coinNum">0</b></div>
+        <div class="chip level" title="Level">⭐ <b id="levelNum">1</b><i class="xp"><i id="xpFill"></i></i></div>
+        <div class="hud-btns">
+          <button class="round-btn" id="shopBtn" aria-label="Shop">🛒</button>
+          <button class="round-btn" id="muteBtn" aria-label="Sound on or off">🔊</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== PIP ===== -->
     <div id="petWrap">
       <div id="thought" hidden></div>
       <div id="zzz" hidden><span>z</span><span>z</span><span>Z</span></div>
@@ -54,31 +190,31 @@
         <div id="petBody">
           <div id="petTilt">
             <img id="petImg" src="pip.webp" alt="" draggable="false">
-            <svg id="petFx" viewBox="0 0 551 669" aria-hidden="true">
+            <svg id="petFx" viewBox="0 0 792 893" aria-hidden="true">
               <defs>
-                <mask id="furMask" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="551" height="669">
-                  <image href="pip.webp" x="0" y="0" width="551" height="669"/>
+                <mask id="furMask" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="792" height="893">
+                  <image href="pip.webp" x="0" y="0" width="792" height="893"/>
                 </mask>
-                <filter id="softEdge" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter>
+                <filter id="softEdge" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
               </defs>
               <g id="dirt" mask="url(#furMask)">
                 <g filter="url(#softEdge)">
-                  <ellipse cx="190" cy="470" rx="26" ry="20"/><ellipse cx="228" cy="500" rx="13" ry="10"/>
-                  <ellipse cx="360" cy="560" rx="30" ry="22"/><ellipse cx="330" cy="590" rx="12" ry="9"/>
-                  <ellipse cx="150" cy="150" rx="20" ry="16"/><ellipse cx="400" cy="420" rx="16" ry="13"/>
-                  <ellipse cx="90" cy="400" rx="18" ry="14"/><ellipse cx="480" cy="330" rx="15" ry="12"/>
-                  <ellipse cx="300" cy="120" rx="14" ry="11"/>
+                  <ellipse cx="300" cy="620" rx="34" ry="26"/><ellipse cx="344" cy="660" rx="16" ry="12"/>
+                  <ellipse cx="500" cy="720" rx="38" ry="28"/><ellipse cx="462" cy="760" rx="15" ry="11"/>
+                  <ellipse cx="220" cy="330" rx="24" ry="18"/><ellipse cx="560" cy="560" rx="22" ry="17"/>
+                  <ellipse cx="150" cy="560" rx="22" ry="17"/><ellipse cx="640" cy="520" rx="18" ry="14"/>
+                  <ellipse cx="420" cy="110" rx="18" ry="14"/>
                 </g>
               </g>
               <g id="lids">
                 <g filter="url(#softEdge)">
-                  <ellipse cx="270" cy="219" rx="47" ry="43" fill="#e9e7ed"/>
-                  <ellipse cx="421" cy="220" rx="27" ry="40" fill="#efe9e3"/>
+                  <circle cx="294" cy="237" r="47" fill="#dfe2e3"/>
+                  <circle cx="505" cy="236" r="48" fill="#dfe2e3"/>
                 </g>
-                <path d="M232 226 Q270 250 308 226" fill="none" stroke="#2b2836" stroke-width="6" stroke-linecap="round"/>
-                <path d="M404 224 Q421 242 438 222" fill="none" stroke="#2b2836" stroke-width="5" stroke-linecap="round"/>
+                <path d="M256 246 Q294 272 332 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
+                <path d="M466 246 Q505 272 544 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
               </g>
-              <circle id="beakPt" cx="362" cy="262" r="3" fill="none"/>
+              <circle id="beakPt" cx="394" cy="288" r="3" fill="none"/>
               <g id="bubbles" mask="url(#furMask)"></g>
               <g id="hat"></g>
             </svg>
@@ -88,31 +224,39 @@
       <div id="shower" hidden></div>
     </div>
 
-    <section id="panel" class="panel"></section>
+    <!-- ===== BOTTOM BAR ===== -->
+    <footer class="bottombar">
+      <button class="arrow" id="prevRoom" aria-label="Previous room"><svg viewBox="0 0 24 24"><path d="M15 4 L7 12 L15 20"/></svg></button>
+      <div class="bar-center">
+        <div class="room-label" id="roomTitle">Kitchen</div>
+        <div id="controls"></div>
+      </div>
+      <button class="arrow" id="nextRoom" aria-label="Next room"><svg viewBox="0 0 24 24"><path d="M9 4 L17 12 L9 20"/></svg></button>
+    </footer>
   </main>
 
-  <nav class="rooms" id="roomNav">
-    <button data-room="kitchen"><span>🍳</span>Kitchen</button>
-    <button data-room="bath"><span>🛁</span>Bath</button>
-    <button data-room="bed"><span>🌙</span>Bed</button>
-    <button data-room="play"><span>🎮</span>Play</button>
-    <button data-room="closet"><span>🎀</span>Closet</button>
-    <button data-room="shop"><span>🛒</span>Shop</button>
-  </nav>
+  <!-- ===== SLIDE-UP SHEET (shop, wardrobe, games) ===== -->
+  <div id="sheet" hidden>
+    <div class="sheet-card">
+      <div class="sheet-head"><h3 id="sheetTitle"></h3><span class="chip coins small">🪙 <b id="sheetCoins">0</b></span><button class="round-btn" id="sheetClose" aria-label="Close">✕</button></div>
+      <div id="sheetBody"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ============ MINI-GAME OVERLAY ============ -->
 <section id="game" hidden>
   <div class="game-bar">
-    <button class="icon-btn" id="gameClose" aria-label="Quit game">✕</button>
-    <div class="pill" id="gameScore">0</div>
-    <div class="pill" id="gameLives"></div>
+    <button class="round-btn" id="gameClose" aria-label="Quit game">✕</button>
+    <div class="chip" id="gameScore">0</div>
+    <div class="chip" id="gameLives"></div>
   </div>
   <canvas id="gameCanvas"></canvas>
   <div class="game-hint" id="gameHint"></div>
 </section>
 
-<div id="sponge" hidden>🧽</div>
+<div id="sponge" hidden>🧼</div>
+<div id="dragFood" hidden></div>
 <div id="toast" hidden></div>
 <div id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
 
