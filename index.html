@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Puddle</title>
+<meta name="description" content="Puddle: a little jelly-drop pet that lives in your browser. Feed it, bathe it, tuck it in and play games for coins.">
+<meta name="theme-color" content="#7fe0c3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ LOADING SCREEN ============ -->
+<section id="loader" class="screen">
+  <div class="loader-inner">
+    <svg class="loader-pet" viewBox="0 0 200 200" aria-hidden="true">
+      <ellipse cx="100" cy="192" rx="50" ry="6" fill="rgba(0,0,0,.12)"/>
+      <path d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z" fill="#7fe0c3" stroke="#4fb596" stroke-width="4"/>
+      <circle cx="76" cy="122" r="15" fill="#fff"/><circle cx="124" cy="122" r="15" fill="#fff"/>
+      <circle cx="78" cy="124" r="7" fill="#2b2140"/><circle cx="126" cy="124" r="7" fill="#2b2140"/>
+      <path d="M86 150 Q100 164 114 150" stroke="#2b2140" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="60" cy="143" rx="11" ry="6" fill="#ff8fa3" opacity=".55"/><ellipse cx="140" cy="143" rx="11" ry="6" fill="#ff8fa3" opacity=".55"/>
+      <path d="M100 22 Q97 12 101 4" stroke="#3c9a6e" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M101 8 Q113 -3 124 5 Q113 16 101 8Z" fill="#59c48a"/>
+    </svg>
+    <h1 class="logo">Puddle</h1>
+    <p class="tagline">your little jelly-drop friend</p>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    <p class="loading-text" id="loadingText">Filling the puddle…</p>
+    <button class="btn big" id="playBtn" hidden>Play</button>
+  </div>
+</section>
+
+<!-- ============ MAIN APP ============ -->
+<div id="app" hidden>
+  <header class="hud">
+    <div class="meters">
+      <div class="meter" data-stat="hunger" title="Hunger"><span>🍎</span></div>
+      <div class="meter" data-stat="clean" title="Clean"><span>🫧</span></div>
+      <div class="meter" data-stat="energy" title="Energy"><span>🌙</span></div>
+      <div class="meter" data-stat="fun" title="Fun"><span>⭐</span></div>
+    </div>
+    <div class="hud-right">
+      <div class="pill" id="levelPill">Lv <b id="levelNum">1</b><i class="xp"><i id="xpFill"></i></i></div>
+      <div class="pill coins">🪙 <b id="coinNum">0</b></div>
+      <button class="icon-btn" id="muteBtn" aria-label="Sound on or off">🔊</button>
+    </div>
+  </header>
+
+  <main id="room" data-room="kitchen">
+    <div class="room-deco" aria-hidden="true"></div>
+    <h2 class="room-title" id="roomTitle">Kitchen</h2>
+
+    <div id="petWrap">
+      <div id="thought" hidden></div>
+      <div id="zzz" hidden><span>z</span><span>z</span><span>Z</span></div>
+      <svg id="pet" viewBox="0 0 200 200" aria-label="Puddle, your pet">
+        <defs>
+          <radialGradient id="shine" cx="34%" cy="32%" r="70%">
+            <stop offset="0" stop-color="#fff" stop-opacity=".6"/>
+            <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <clipPath id="bodyClip">
+            <path d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z"/>
+          </clipPath>
+        </defs>
+        <ellipse class="shadow" cx="100" cy="193" rx="58" ry="7"/>
+        <g id="petBody">
+          <g id="sprout">
+            <path d="M100 22 Q97 12 101 4" stroke="#3c9a6e" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M101 8 Q113 -3 124 5 Q113 16 101 8Z" fill="#59c48a"/>
+          </g>
+          <path id="body" d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z"/>
+          <path d="M100 22 C122 52 170 88 170 128 C170 166 138 188 100 188 C62 188 30 166 30 128 C30 88 78 52 100 22Z" fill="url(#shine)" pointer-events="none"/>
+          <g id="dirt" clip-path="url(#bodyClip)" pointer-events="none">
+            <circle cx="58" cy="100" r="9"/><circle cx="66" cy="112" r="5"/>
+            <circle cx="142" cy="158" r="10"/><circle cx="132" cy="168" r="5"/>
+            <circle cx="118" cy="70" r="6"/><circle cx="48" cy="160" r="7"/>
+            <circle cx="152" cy="108" r="5"/><circle cx="90" cy="176" r="6"/>
+          </g>
+          <g id="cheeks" pointer-events="none">
+            <ellipse cx="60" cy="143" rx="11" ry="6"/><ellipse cx="140" cy="143" rx="11" ry="6"/>
+          </g>
+          <g id="eyes" pointer-events="none">
+            <g class="eye"><circle cx="76" cy="122" r="15" fill="#fff"/><circle id="pupilL" cx="78" cy="124" r="7" class="pupil"/><circle id="glintL" cx="81" cy="120" r="2.4" fill="#fff"/></g>
+            <g class="eye"><circle cx="124" cy="122" r="15" fill="#fff"/><circle id="pupilR" cx="126" cy="124" r="7" class="pupil"/><circle id="glintR" cx="129" cy="120" r="2.4" fill="#fff"/></g>
+          </g>
+          <g id="closedEyes" pointer-events="none">
+            <path d="M64 124 Q76 132 88 124"/><path d="M112 124 Q124 132 136 124"/>
+          </g>
+          <path id="mouth" d="M86 150 Q100 164 114 150" pointer-events="none"/>
+          <ellipse id="mouthOpen" cx="100" cy="155" rx="10" ry="9" pointer-events="none"/>
+          <g id="bubbles" pointer-events="none"></g>
+          <g id="hat" pointer-events="none"></g>
+        </g>
+      </svg>
+      <div id="shower" hidden></div>
+    </div>
+
+    <section id="panel" class="panel"></section>
+  </main>
+
+  <nav class="rooms" id="roomNav">
+    <button data-room="kitchen"><span>🍳</span>Kitchen</button>
+    <button data-room="bath"><span>🛁</span>Bath</button>
+    <button data-room="bed"><span>🌙</span>Bed</button>
+    <button data-room="play"><span>🎮</span>Play</button>
+    <button data-room="closet"><span>🎀</span>Closet</button>
+    <button data-room="shop"><span>🛒</span>Shop</button>
+  </nav>
+</div>
+
+<!-- ============ MINI-GAME OVERLAY ============ -->
+<section id="game" hidden>
+  <div class="game-bar">
+    <button class="icon-btn" id="gameClose" aria-label="Quit game">✕</button>
+    <div class="pill" id="gameScore">0</div>
+    <div class="pill" id="gameLives"></div>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+  <div class="game-hint" id="gameHint"></div>
+</section>
+
+<div id="sponge" hidden>🧽</div>
+<div id="toast" hidden></div>
+<div id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+
+<script src="game.js"></script>
+</body>
+</html>
