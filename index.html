@@ -205,36 +205,50 @@
                   <radialGradient id="pupil" cx=".4" cy=".35" r=".75">
                     <stop offset="0" stop-color="#3d3760"/><stop offset=".55" stop-color="#1b1733"/><stop offset="1" stop-color="#0c0a1a"/>
                   </radialGradient>
-                  <radialGradient id="gWhite" cx=".5" cy=".42" r=".6">
-                    <stop offset="0" stop-color="#ffffff"/><stop offset=".75" stop-color="#f4f7fa"/><stop offset="1" stop-color="#cfd8e2"/>
+                  <radialGradient id="gWhite" cx=".5" cy=".4" r=".62">
+                    <stop offset="0" stop-color="#f8f9fb"/><stop offset=".7" stop-color="#eceff3"/><stop offset="1" stop-color="#c6cdd7"/>
                   </radialGradient>
-                  <radialGradient id="gIris" cx=".45" cy=".3" r=".8">
-                    <stop offset="0" stop-color="#4b4275"/><stop offset=".6" stop-color="#1e1838"/><stop offset="1" stop-color="#0d0a1c"/>
+                  <radialGradient id="gIris" cx=".5" cy=".55" r=".56">
+                    <stop offset="0" stop-color="#2a2238"/><stop offset=".45" stop-color="#3d3359"/><stop offset=".82" stop-color="#262038"/><stop offset="1" stop-color="#100d1b"/>
                   </radialGradient>
+                  <linearGradient id="lidShade" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#1a1f33" stop-opacity=".42"/><stop offset=".32" stop-color="#1a1f33" stop-opacity="0"/>
+                  </linearGradient>
+                  <filter id="socketBlur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+                  <filter id="whiteSoft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.1"/></filter>
+                  <filter id="hlSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation=".7"/></filter>
                   <clipPath id="whiteL"><ellipse cx="289" cy="234" rx="41" ry="46"/></clipPath>
                   <clipPath id="whiteR"><ellipse cx="503" cy="234" rx="41" ry="46"/></clipPath>
                 </defs>
-                <!-- glossy cartoon eyes: the dark iris and its sparkles shift together to look at you -->
+                <!-- cartoon eyes: soft shading around them, the iris (with its shine) shifts to look at you -->
                 <g id="ceyes">
                   <g class="ceye">
-                    <ellipse cx="289" cy="234" rx="41" ry="46" fill="url(#gWhite)"/>
-                    <g clip-path="url(#whiteL)"><g id="pupilL">
-                      <ellipse cx="289" cy="237" rx="34" ry="39" fill="url(#gIris)"/>
-                      <ellipse cx="289" cy="258" rx="22" ry="11" fill="#8a7fd0" opacity=".45"/>
-                      <circle cx="276" cy="219" r="11.5" fill="#fff"/>
-                      <circle cx="302" cy="249" r="5" fill="#fff"/>
-                      <circle cx="305" cy="216" r="3" fill="#fff" opacity=".9"/>
-                    </g></g>
+                    <ellipse cx="289" cy="236" rx="50" ry="55" fill="#2a2f47" opacity=".3" filter="url(#socketBlur)"/>
+                    <ellipse cx="289" cy="234" rx="41" ry="46" fill="url(#gWhite)" filter="url(#whiteSoft)"/>
+                    <g clip-path="url(#whiteL)">
+                      <g id="pupilL">
+                        <ellipse cx="289" cy="237" rx="31.5" ry="36" fill="url(#gIris)"/>
+                        <ellipse cx="289" cy="239" rx="15" ry="17" fill="#07060d" opacity=".9"/>
+                        <ellipse cx="289" cy="257" rx="20" ry="8.5" fill="#9a8fd8" opacity=".28" filter="url(#hlSoft)"/>
+                        <ellipse cx="277" cy="221" rx="9.5" ry="10.5" fill="#fff" opacity=".95" filter="url(#hlSoft)"/>
+                        <circle cx="301" cy="251" r="4.2" fill="#fff" opacity=".85"/>
+                      </g>
+                      <rect x="244" y="186" width="90" height="96" fill="url(#lidShade)"/>
+                    </g>
                   </g>
                   <g class="ceye">
-                    <ellipse cx="503" cy="234" rx="41" ry="46" fill="url(#gWhite)"/>
-                    <g clip-path="url(#whiteR)"><g id="pupilR">
-                      <ellipse cx="503" cy="237" rx="34" ry="39" fill="url(#gIris)"/>
-                      <ellipse cx="503" cy="258" rx="22" ry="11" fill="#8a7fd0" opacity=".45"/>
-                      <circle cx="490" cy="219" r="11.5" fill="#fff"/>
-                      <circle cx="516" cy="249" r="5" fill="#fff"/>
-                      <circle cx="519" cy="216" r="3" fill="#fff" opacity=".9"/>
-                    </g></g>
+                    <ellipse cx="503" cy="236" rx="50" ry="55" fill="#2a2f47" opacity=".3" filter="url(#socketBlur)"/>
+                    <ellipse cx="503" cy="234" rx="41" ry="46" fill="url(#gWhite)" filter="url(#whiteSoft)"/>
+                    <g clip-path="url(#whiteR)">
+                      <g id="pupilR">
+                        <ellipse cx="503" cy="237" rx="31.5" ry="36" fill="url(#gIris)"/>
+                        <ellipse cx="503" cy="239" rx="15" ry="17" fill="#07060d" opacity=".9"/>
+                        <ellipse cx="503" cy="257" rx="20" ry="8.5" fill="#9a8fd8" opacity=".28" filter="url(#hlSoft)"/>
+                        <ellipse cx="491" cy="221" rx="9.5" ry="10.5" fill="#fff" opacity=".95" filter="url(#hlSoft)"/>
+                        <circle cx="515" cy="251" r="4.2" fill="#fff" opacity=".85"/>
+                      </g>
+                      <rect x="458" y="186" width="90" height="96" fill="url(#lidShade)"/>
+                    </g>
                   </g>
                 </g>
                 <g id="lids">

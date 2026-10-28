@@ -26,7 +26,7 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 | `game.js` | Everything that happens |
 | `icons.js` | Every cartoon icon in the game (food, needs, buttons, coins, hearts…) drawn as SVG |
 | `pip.webp` | Pip's full picture (792 × 893, transparent background), used on the loading screen and in games |
-| `pip_head.webp`, `pip_body.webp` | Pip split at the top of the scarf so the head can lean on its own |
+| `pip_head.webp`, `pip_body.webp` | Pip split so the head and scarf turn together from the neck (original eyes painted out of the head; fur painted in behind the scarf on the body) |
 | `wrangler.jsonc`, `.assetsignore` | Tell Cloudflare to publish the site as plain files |
 
 ## Easy changes
