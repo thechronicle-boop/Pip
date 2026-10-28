@@ -245,15 +245,15 @@
     $('#muteBtn').textContent = S.muted ? '🔇' : '🔊';
   }
 
-  // Pip's eyes follow your cursor or finger (the body stays still).
-  // When nothing has moved for a few seconds, Pip glances around on its own.
-  // EYE_MAX = how far the irises can travel, in picture pixels.
-  const EYE_MAX = { x: 9, y: 7 };
+  // Pou-style eyes: the irises drift gently toward your cursor or finger and
+  // ease back to looking straight ahead when you stop. The shine never moves.
+  // EYE_MAX = how far the irises can travel, in picture pixels (keep it small).
+  const EYE_MAX = { left: 5, right: 5, up: 3.5, down: 2 };
   const EYES = [
-    { el: null, id: '#irisL', x: 288.4, y: 235.9, cx: 0, cy: 0 },
-    { el: null, id: '#irisR', x: 502.7, y: 235.8, cx: 0, cy: 0 },
+    { el: null, id: '#irisL', x: 294, y: 238, cx: 0, cy: 0 },
+    { el: null, id: '#irisR', x: 497.5, y: 237, cx: 0, cy: 0 },
   ];
-  let lookTarget = null, lastLook = 0, glance = { x: 0, y: 0 }, nextGlance = 0;
+  let lookTarget = null, lastLook = 0;
   const setLook = (e) => { lookTarget = [e.clientX, e.clientY]; lastLook = performance.now(); };
   document.addEventListener('pointermove', setLook);
   document.addEventListener('pointerdown', setLook);
@@ -261,25 +261,25 @@
     const r = $('#petFx').getBoundingClientRect();
     if (!r.width) return;
     const sc = r.width / PIP_W;
-    const following = lookTarget && now - lastLook < 3500;
-    if (!following && now > nextGlance) {
-      // idle: look somewhere random, or straight ahead
-      glance = Math.random() < 0.35 ? { x: 0, y: 0 } : { x: rnd(-1, 1), y: rnd(-0.6, 0.8) };
-      nextGlance = now + rnd(1400, 3600);
-    }
+    const following = !S.asleep && lookTarget && now - lastLook < 2500;
     for (const eye of EYES) {
       eye.el = eye.el || $(eye.id);
       let tx = 0, ty = 0;
-      if (S.asleep) { tx = 0; ty = 0; }
-      else if (following) {
+      if (following) {
         const dx = lookTarget[0] - (r.left + eye.x * sc), dy = lookTarget[1] - (r.top + eye.y * sc);
-        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 160);
-        tx = (dx / d) * m * EYE_MAX.x; ty = (dy / d) * m * EYE_MAX.y;
-      } else { tx = glance.x * EYE_MAX.x; ty = glance.y * EYE_MAX.y; }
-      const k = following ? 0.25 : 0.12;
+        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 220);
+        tx = (dx / d) * m; ty = (dy / d) * m;
+        tx *= tx < 0 ? EYE_MAX.left : EYE_MAX.right;
+        ty *= ty < 0 ? EYE_MAX.up : EYE_MAX.down;
+      }
+      const k = following ? 0.14 : 0.06;
       eye.cx += (tx - eye.cx) * k; eye.cy += (ty - eye.cy) * k;
       eye.el.setAttribute('transform', `translate(${eye.cx.toFixed(2)} ${eye.cy.toFixed(2)})`);
     }
+    // at rest, hide the eye layer so Pip is exactly the original picture
+    const resting = !following && EYES.every((e) => Math.abs(e.cx) < 0.15 && Math.abs(e.cy) < 0.15);
+    const eyesEl = $('#eyes');
+    if (eyesEl.style.display !== (resting ? 'none' : '')) eyesEl.style.display = resting ? 'none' : '';
   }
   function blinkLoop() {
     setTimeout(() => {

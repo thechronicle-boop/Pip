@@ -200,27 +200,26 @@
                 <clipPath id="sockL"><ellipse cx="288.4" cy="233.9" rx="29.4" ry="33.4" transform="rotate(135 288.4 233.9)"/></clipPath>
                 <clipPath id="sockR"><ellipse cx="502.7" cy="233.8" rx="31.7" ry="34" transform="rotate(53 502.7 233.8)"/></clipPath>
                 <radialGradient id="sclera" cx=".45" cy=".42" r=".62">
-                  <stop offset="0" stop-color="#fbfcfd"/><stop offset=".62" stop-color="#e8ecf0"/><stop offset="1" stop-color="#b7c0ca"/>
+                  <stop offset="0" stop-color="#eef3f5"/><stop offset=".6" stop-color="#d4dee3"/><stop offset="1" stop-color="#a7b4bb"/>
                 </radialGradient>
                 <linearGradient id="lidShade" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0" stop-color="#1e1e32" stop-opacity=".42"/><stop offset=".32" stop-color="#1e1e32" stop-opacity="0"/>
                 </linearGradient>
               </defs>
-              <!-- moving eyes: white eyeball + iris (cut from the picture) that follows the pointer -->
+              <!-- Pou-style eyes: the dark iris drifts a little toward your finger,
+                   the shine stays put, and at rest it's exactly the original picture -->
               <g id="eyes">
                 <g clip-path="url(#sockL)">
                   <rect x="250" y="190" width="80" height="90" fill="url(#sclera)"/>
-                  <g transform="translate(-5.6 -2.1)"><g id="irisL">
-                    <image href="iris_l.webp" x="264" y="208" width="60" height="60" transform="translate(294 238) scale(.9) translate(-294 -238)"/>
-                  </g></g>
-                  <rect x="250" y="190" width="80" height="90" fill="url(#lidShade)"/>
+                  <g id="irisL"><image href="iris_l.webp" x="264" y="208" width="60" height="60"/></g>
+                  <image href="shine_l.webp" x="264" y="208" width="60" height="60"/>
+                  <rect x="250" y="190" width="80" height="90" fill="url(#lidShade)" opacity=".7"/>
                 </g>
                 <g clip-path="url(#sockR)">
                   <rect x="462" y="190" width="82" height="90" fill="url(#sclera)"/>
-                  <g transform="translate(5.2 -1.2)"><g id="irisR">
-                    <image href="iris_r.webp" x="466" y="205" width="64" height="64" transform="translate(497.5 237) scale(.9) translate(-497.5 -237)"/>
-                  </g></g>
-                  <rect x="462" y="190" width="82" height="90" fill="url(#lidShade)"/>
+                  <g id="irisR"><image href="iris_r.webp" x="466" y="205" width="64" height="64"/></g>
+                  <image href="shine_r.webp" x="466" y="205" width="64" height="64"/>
+                  <rect x="462" y="190" width="82" height="90" fill="url(#lidShade)" opacity=".7"/>
                 </g>
               </g>
               <g id="dirt" mask="url(#furMask)">
