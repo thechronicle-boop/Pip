@@ -245,17 +245,41 @@
     $('#muteBtn').textContent = S.muted ? '🔇' : '🔊';
   }
 
-  // Pip leans a little toward your finger / cursor
-  let lookTarget = null, tilt = 0;
-  document.addEventListener('pointermove', (e) => { lookTarget = [e.clientX, e.clientY]; });
-  function updateTilt() {
-    let target = 0;
-    if (lookTarget && !S.asleep && !scrubbing) {
-      const r = $('#pet').getBoundingClientRect();
-      if (r.width) target = clamp((lookTarget[0] - (r.left + r.width / 2)) / 40, -5, 5);
+  // Pip's eyes follow your cursor or finger (the body stays still).
+  // When nothing has moved for a few seconds, Pip glances around on its own.
+  // EYE_MAX = how far the irises can travel, in picture pixels.
+  const EYE_MAX = { x: 9, y: 7 };
+  const EYES = [
+    { el: null, id: '#irisL', x: 288.4, y: 235.9, cx: 0, cy: 0 },
+    { el: null, id: '#irisR', x: 502.7, y: 235.8, cx: 0, cy: 0 },
+  ];
+  let lookTarget = null, lastLook = 0, glance = { x: 0, y: 0 }, nextGlance = 0;
+  const setLook = (e) => { lookTarget = [e.clientX, e.clientY]; lastLook = performance.now(); };
+  document.addEventListener('pointermove', setLook);
+  document.addEventListener('pointerdown', setLook);
+  function updateEyes(now) {
+    const r = $('#petFx').getBoundingClientRect();
+    if (!r.width) return;
+    const sc = r.width / PIP_W;
+    const following = lookTarget && now - lastLook < 3500;
+    if (!following && now > nextGlance) {
+      // idle: look somewhere random, or straight ahead
+      glance = Math.random() < 0.35 ? { x: 0, y: 0 } : { x: rnd(-1, 1), y: rnd(-0.6, 0.8) };
+      nextGlance = now + rnd(1400, 3600);
     }
-    tilt += (target - tilt) * 0.08;
-    $('#petTilt').style.transform = `rotate(${tilt.toFixed(2)}deg)`;
+    for (const eye of EYES) {
+      eye.el = eye.el || $(eye.id);
+      let tx = 0, ty = 0;
+      if (S.asleep) { tx = 0; ty = 0; }
+      else if (following) {
+        const dx = lookTarget[0] - (r.left + eye.x * sc), dy = lookTarget[1] - (r.top + eye.y * sc);
+        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 160);
+        tx = (dx / d) * m * EYE_MAX.x; ty = (dy / d) * m * EYE_MAX.y;
+      } else { tx = glance.x * EYE_MAX.x; ty = glance.y * EYE_MAX.y; }
+      const k = following ? 0.25 : 0.12;
+      eye.cx += (tx - eye.cx) * k; eye.cy += (ty - eye.cy) * k;
+      eye.el.setAttribute('transform', `translate(${eye.cx.toFixed(2)} ${eye.cy.toFixed(2)})`);
+    }
   }
   function blinkLoop() {
     setTimeout(() => {
@@ -844,7 +868,7 @@
     bindPet(); bindPanel(); bindFoodDrag();
     blinkLoop();
     setInterval(tick, 1000);
-    (function tiltLoop() { updateTilt(); requestAnimationFrame(tiltLoop); })();
+    (function eyeLoop(t) { updateEyes(t || performance.now()); requestAnimationFrame(eyeLoop); })();
     document.addEventListener('visibilitychange', () => { if (document.hidden) save(); else { applyOffline(); renderHud(); renderFace(); } });
     window.addEventListener('pagehide', save);
     runLoader();
