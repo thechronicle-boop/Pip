@@ -15,7 +15,7 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 - **Bedroom**: lights off and Pip closes its eyes to sleep, energy refills, Pip wakes up when full
 - **Games**: *Star Catch* (catch stars, dodge storm clouds) and *Bounce* (tap to keep Pip in the air)
 - **Wardrobe**: 8 accessories to unlock
-- Tap Pip for giggles, Pip's eyes follow your cursor or finger Pou-style (`EYE_MAX` in `game.js` sets how far), blinks, droops when a need is very low, levels and XP, a daily coin gift, sound effects (with mute)
+- Tap Pip for giggles, Pip has Pou-style cartoon eyes whose pupils follow your cursor or finger (`EYE_MAX` in `game.js` sets how far), blinks, droops when a need is very low, levels and XP, a daily coin gift, sound effects (with mute)
 
 ## Files
 
@@ -34,7 +34,7 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 - **How fast needs drop**: `RATES` (per minute while open) and `OFFLINE` (per hour while closed)
 - **Starting coins and food**: the `fresh()` function
 - **Rooms**: each room's background is an SVG `scene` in `index.html`; the walk order is `ROOMS` in `game.js`
-- **New look for Pip**: replace `pip.webp` with another 792 × 893 picture with a transparent background. If the eyes move, update the eyelid ellipses (`#lids`) and beak point (`#beakPt`) in `index.html`
+- **New look for Pip**: replace `pip.webp` with another 792 × 893 picture with a transparent background. If the eyes move, update the cartoon eyes (`#ceyes`), sleeping eyelids (`#lids`) and beak point (`#beakPt`) in `index.html`
 
 After changing anything, refresh the page. To reset a save, open the browser console and run `localStorage.removeItem('pip-save-v1')`.
 

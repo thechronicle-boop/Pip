@@ -51,8 +51,8 @@
       '<g stroke="#2b2140" stroke-width="7" stroke-linejoin="round"><path d="M206 146 Q198 -44 396 -48 Q594 -44 586 146Z" fill="#ff7a59"/><path d="M276 30 Q276 -10 316 -26 M356 -40 V100 M436 -40 V100 M516 30 Q516 -10 476 -26" fill="none" stroke="#e85d3f" stroke-width="11" stroke-linecap="round"/><rect x="190" y="112" width="412" height="58" rx="29" fill="#e85d3f"/><circle cx="396" cy="-60" r="40" fill="#fff"/></g>' },
     cap:    { n: 'Cap', price: 160, box: '180 -60 432 240', svg:
       '<g stroke="#2b2140" stroke-width="7" stroke-linejoin="round"><path d="M214 140 Q210 -30 396 -34 Q582 -30 578 140Z" fill="#4f7cff"/><path d="M396 -34 V140" fill="none" stroke="#3a5fd6" stroke-width="6"/><ellipse cx="396" cy="146" rx="230" ry="34" fill="#3a5fd6"/><circle cx="396" cy="-34" r="15" fill="#3a5fd6"/></g>' },
-    shades: { n: 'Shades', price: 220, box: '220 180 352 120', svg:
-      '<g stroke="#2b2140" stroke-width="6"><rect x="234" y="192" width="122" height="92" rx="38" fill="#1f1a2e" opacity=".95"/><rect x="444" y="192" width="122" height="92" rx="38" fill="#1f1a2e" opacity=".95"/><path d="M356 222 Q400 202 444 222" fill="none" stroke-width="12"/></g><path d="M256 218 L296 208 M466 218 L506 208" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".55"/>' },
+    shades: { n: 'Shades', price: 220, box: '226 170 346 130', svg:
+      '<g stroke="#2b2140" stroke-width="6"><rect x="236" y="180" width="112" height="108" rx="40" fill="#1f1a2e"/><rect x="450" y="180" width="112" height="108" rx="40" fill="#1f1a2e"/><path d="M348 214 Q396 194 450 214" fill="none" stroke-width="12"/></g><path d="M258 208 L298 198 M472 208 L512 198" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".55"/>' },
     headphones: { n: 'Headphones', price: 260, box: '130 -80 532 430', svg:
       '<path d="M186 262 Q150 -64 396 -60 Q642 -64 606 262" stroke="#2b2140" stroke-width="30" fill="none" stroke-linecap="round"/><g stroke="#2b2140" stroke-width="7"><rect x="140" y="206" width="78" height="138" rx="32" fill="#ff5c8a"/><rect x="574" y="206" width="78" height="138" rx="32" fill="#ff5c8a"/></g>' },
     crown:  { n: 'Crown', price: 500, box: '280 -80 232 200', svg:
@@ -245,13 +245,13 @@
     $('#muteBtn').textContent = S.muted ? '🔇' : '🔊';
   }
 
-  // Pou-style eyes: the irises drift gently toward your cursor or finger and
-  // ease back to looking straight ahead when you stop. The shine never moves.
-  // EYE_MAX = how far the irises can travel, in picture pixels (keep it small).
-  const EYE_MAX = { left: 5, right: 5, up: 3.5, down: 2 };
+  // Pou-style cartoon eyes: the pupils follow your cursor or finger and
+  // drift back to looking at you when you stop.
+  // EYE_MAX = how far the pupils can travel, in picture pixels.
+  const EYE_MAX = { x: 14, y: 16 };
   const EYES = [
-    { el: null, id: '#irisL', x: 294, y: 238, cx: 0, cy: 0 },
-    { el: null, id: '#irisR', x: 497.5, y: 237, cx: 0, cy: 0 },
+    { el: null, id: '#pupilL', x: 289, y: 234, cx: 0, cy: 0 },
+    { el: null, id: '#pupilR', x: 503, y: 234, cx: 0, cy: 0 },
   ];
   let lookTarget = null, lastLook = 0;
   const setLook = (e) => { lookTarget = [e.clientX, e.clientY]; lastLook = performance.now(); };
@@ -261,25 +261,19 @@
     const r = $('#petFx').getBoundingClientRect();
     if (!r.width) return;
     const sc = r.width / PIP_W;
-    const following = !S.asleep && lookTarget && now - lastLook < 2500;
+    const following = !S.asleep && lookTarget && now - lastLook < 3000;
     for (const eye of EYES) {
       eye.el = eye.el || $(eye.id);
       let tx = 0, ty = 0;
       if (following) {
         const dx = lookTarget[0] - (r.left + eye.x * sc), dy = lookTarget[1] - (r.top + eye.y * sc);
-        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 220);
-        tx = (dx / d) * m; ty = (dy / d) * m;
-        tx *= tx < 0 ? EYE_MAX.left : EYE_MAX.right;
-        ty *= ty < 0 ? EYE_MAX.up : EYE_MAX.down;
+        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 180);
+        tx = (dx / d) * m * EYE_MAX.x; ty = (dy / d) * m * EYE_MAX.y;
       }
-      const k = following ? 0.14 : 0.06;
+      const k = following ? 0.22 : 0.08;
       eye.cx += (tx - eye.cx) * k; eye.cy += (ty - eye.cy) * k;
       eye.el.setAttribute('transform', `translate(${eye.cx.toFixed(2)} ${eye.cy.toFixed(2)})`);
     }
-    // at rest, hide the eye layer so Pip is exactly the original picture
-    const resting = !following && EYES.every((e) => Math.abs(e.cx) < 0.15 && Math.abs(e.cy) < 0.15);
-    const eyesEl = $('#eyes');
-    if (eyesEl.style.display !== (resting ? 'none' : '')) eyesEl.style.display = resting ? 'none' : '';
   }
   function blinkLoop() {
     setTimeout(() => {
