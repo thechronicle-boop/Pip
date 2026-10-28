@@ -15,7 +15,7 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 - **Bedroom**: lights off and Pip closes its eyes to sleep, energy refills, Pip wakes up when full
 - **Games**: *Star Catch* (catch stars, dodge storm clouds) and *Bounce* (tap to keep Pip in the air)
 - **Wardrobe**: 8 accessories to unlock
-- Tap Pip for giggles, Pip has Pou-style cartoon eyes that each follow your cursor or finger, and the head leans toward you (`EYE_MAX` and `HEAD_MAX` in `game.js` set how far), blinks, droops when a need is very low, levels and XP, a daily coin gift, sound effects (with mute)
+- Tap Pip for giggles, Pip has Pou-style cartoon eyes that each follow your cursor or finger, and the head leans toward you (`EYE_MAX`, `EYE_SOLO` and `HEAD_MAX` in `game.js` set how far), blinks, droops when a need is very low, levels and XP, a daily coin gift, sound effects (with mute)
 
 ## Files
 

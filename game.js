@@ -246,12 +246,13 @@
     $('#muteBtn').innerHTML = icon(S.muted ? 'soundOff' : 'soundOn');
   }
 
-  // Pou-style cartoon eyes: each pupil aims at your cursor or finger on its own
-  // (so they cross a little when you're between them), and the head leans
-  // gently toward you. With a mouse they keep watching while it's in the
+  // Pou-style cartoon eyes: both pupils look toward your cursor or finger
+  // together, with a small bit of each eye aiming on its own (EYE_SOLO) so
+  // they feel alive without going cross-eyed. The head leans gently toward you. With a mouse they keep watching while it's in the
   // window; with touch they follow your finger, then relax back.
   // EYE_MAX = how far the pupils travel; HEAD_MAX = how far the head leans.
-  const EYE_MAX = { x: 15, y: 17 };
+  const EYE_MAX = { x: 11, y: 11 };
+  const EYE_SOLO = 0.2; // 0 = eyes move as a pair, 1 = each aims fully on its own
   const HEAD_MAX = { rot: 3, x: 10, y: 6 };
   const EYES = [
     { el: null, id: '#pupilL', x: 289, y: 234, cx: 0, cy: 0 },
@@ -281,17 +282,22 @@
     const kh = following ? 0.09 : 0.05;
     HEAD.rot += (hr - HEAD.rot) * kh; HEAD.tx += (hx - HEAD.tx) * kh; HEAD.ty += (hy - HEAD.ty) * kh;
     $('#petHead').style.transform = `translate(${(HEAD.tx * sc).toFixed(2)}px, ${(HEAD.ty * sc).toFixed(2)}px) rotate(${HEAD.rot.toFixed(2)}deg)`;
-    // each eye aims from its own position
+    // where a point sits relative to Pip's face, as a gentle 0..1 look vector
+    const lookFrom = (px, py) => {
+      const dx = lookTarget[0] - (r.left + (px + HEAD.tx) * sc), dy = lookTarget[1] - (r.top + (py + HEAD.ty) * sc);
+      const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 150);
+      return [(dx / d) * m, (dy / d) * m];
+    };
+    const shared = following ? lookFrom(396, 234) : [0, 0];
     for (const eye of EYES) {
       eye.el = eye.el || $(eye.id);
       let tx = 0, ty = 0;
       if (following) {
-        const ex = r.left + (eye.x + HEAD.tx) * sc, ey = r.top + (eye.y + HEAD.ty) * sc;
-        const dx = lookTarget[0] - ex, dy = lookTarget[1] - ey;
-        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 70);
-        tx = (dx / d) * m * EYE_MAX.x; ty = (dy / d) * m * EYE_MAX.y;
+        const own = lookFrom(eye.x, eye.y);
+        tx = (shared[0] * (1 - EYE_SOLO) + own[0] * EYE_SOLO) * EYE_MAX.x;
+        ty = (shared[1] * (1 - EYE_SOLO) + own[1] * EYE_SOLO) * EYE_MAX.y;
       }
-      const k = following ? 0.3 : 0.08;
+      const k = following ? 0.18 : 0.08;
       eye.cx += (tx - eye.cx) * k; eye.cy += (ty - eye.cy) * k;
       eye.el.setAttribute('transform', `translate(${eye.cx.toFixed(2)} ${eye.cy.toFixed(2)})`);
     }
