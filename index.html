@@ -8,6 +8,8 @@
 <meta name="theme-color" content="#ffd9a0">
 <link rel="icon" href="pip.webp">
 <link rel="preload" as="image" href="pip.webp">
+<link rel="preload" as="image" href="pip_head.webp">
+<link rel="preload" as="image" href="pip_body.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
@@ -167,17 +169,17 @@
     <!-- ===== TOP BAR ===== -->
     <header class="hud">
       <div class="needs">
-        <div class="need" data-stat="hunger" title="Hunger"><i></i><span>🍗</span></div>
-        <div class="need" data-stat="clean" title="Clean"><i></i><span>🧼</span></div>
-        <div class="need" data-stat="energy" title="Energy"><i></i><span>⚡</span></div>
-        <div class="need" data-stat="fun" title="Fun"><i></i><span>😄</span></div>
+        <div class="need" data-stat="hunger" title="Hunger"><i></i><span data-icon="hunger"></span></div>
+        <div class="need" data-stat="clean" title="Clean"><i></i><span data-icon="clean"></span></div>
+        <div class="need" data-stat="energy" title="Energy"><i></i><span data-icon="energy"></span></div>
+        <div class="need" data-stat="fun" title="Fun"><i></i><span data-icon="fun"></span></div>
       </div>
       <div class="hud-right">
-        <div class="chip coins">🪙 <b id="coinNum">0</b></div>
-        <div class="chip level" title="Level">⭐ <b id="levelNum">1</b><i class="xp"><i id="xpFill"></i></i></div>
+        <div class="chip coins"><span data-icon="coin"></span><b id="coinNum">0</b></div>
+        <div class="chip level" title="Level"><span data-icon="star"></span><b id="levelNum">1</b><i class="xp"><i id="xpFill"></i></i></div>
         <div class="hud-btns">
-          <button class="round-btn" id="shopBtn" aria-label="Shop">🛒</button>
-          <button class="round-btn" id="muteBtn" aria-label="Sound on or off">🔊</button>
+          <button class="round-btn" id="shopBtn" aria-label="Shop"><span data-icon="cart"></span></button>
+          <button class="round-btn" id="muteBtn" aria-label="Sound on or off"></button>
         </div>
       </div>
     </header>
@@ -189,69 +191,79 @@
       <div id="pet" aria-label="Pip, your penguin">
         <div id="petBody">
           <div id="petTilt">
-            <img id="petImg" src="pip.webp" alt="" draggable="false">
+            <!-- body (stays still) -->
+            <img id="petImg" src="pip_body.webp" alt="" draggable="false">
+            <!-- head (leans gently toward you, carrying the eyes and hats) -->
+            <div id="petHead">
+              <img id="headImg" src="pip_head.webp" alt="" draggable="false">
+              <svg id="headFx" viewBox="0 0 792 893" aria-hidden="true">
+                <defs>
+                  <filter id="softEdgeH" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+                  <linearGradient id="eyeWhite" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f6f8fb"/><stop offset="1" stop-color="#dfe6ee"/>
+                  </linearGradient>
+                  <radialGradient id="pupil" cx=".4" cy=".35" r=".75">
+                    <stop offset="0" stop-color="#3d3760"/><stop offset=".55" stop-color="#1b1733"/><stop offset="1" stop-color="#0c0a1a"/>
+                  </radialGradient>
+                  <clipPath id="whiteL"><ellipse cx="289" cy="234" rx="42" ry="46"/></clipPath>
+                  <clipPath id="whiteR"><ellipse cx="503" cy="234" rx="42" ry="46"/></clipPath>
+                </defs>
+                <!-- Pou-style cartoon eyes drawn over Pip's own eyes; each pupil follows you on its own -->
+                <g id="ceyes">
+                  <!-- fur patches hiding Pip's own eyes underneath (shows during blinks) -->
+                  <g filter="url(#softEdgeH)">
+                    <circle cx="289" cy="234" r="45" fill="#dfe2e3"/>
+                    <circle cx="503" cy="234" r="45" fill="#dfe2e3"/>
+                  </g>
+                  <g class="ceye">
+                    <ellipse cx="289" cy="234" rx="42" ry="46" fill="url(#eyeWhite)"/>
+                    <g clip-path="url(#whiteL)"><g id="pupilL">
+                      <circle cx="289" cy="236" r="25" fill="url(#pupil)"/>
+                      <circle cx="280" cy="226" r="8.5" fill="#fff"/>
+                      <circle cx="298" cy="245" r="3.8" fill="#fff" opacity=".9"/>
+                    </g></g>
+                    <ellipse cx="289" cy="234" rx="42" ry="46" fill="none" stroke="#1d1a33" stroke-width="5.5"/>
+                  </g>
+                  <g class="ceye">
+                    <ellipse cx="503" cy="234" rx="42" ry="46" fill="url(#eyeWhite)"/>
+                    <g clip-path="url(#whiteR)"><g id="pupilR">
+                      <circle cx="503" cy="236" r="25" fill="url(#pupil)"/>
+                      <circle cx="494" cy="226" r="8.5" fill="#fff"/>
+                      <circle cx="512" cy="245" r="3.8" fill="#fff" opacity=".9"/>
+                    </g></g>
+                    <ellipse cx="503" cy="234" rx="42" ry="46" fill="none" stroke="#1d1a33" stroke-width="5.5"/>
+                  </g>
+                </g>
+                <g id="lids">
+                  <g filter="url(#softEdgeH)">
+                    <circle cx="294" cy="237" r="47" fill="#dfe2e3"/>
+                    <circle cx="505" cy="236" r="48" fill="#dfe2e3"/>
+                  </g>
+                  <path d="M256 246 Q294 272 332 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
+                  <path d="M466 246 Q505 272 544 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
+                </g>
+                <circle id="beakPt" cx="394" cy="288" r="3" fill="none"/>
+                <g id="hat"></g>
+              </svg>
+            </div>
+            <!-- dirt and bath bubbles on top -->
             <svg id="petFx" viewBox="0 0 792 893" aria-hidden="true">
               <defs>
                 <mask id="furMask" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="792" height="893">
                   <image href="pip.webp" x="0" y="0" width="792" height="893"/>
                 </mask>
                 <filter id="softEdge" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
-                <!-- cartoon eyes -->
-                <linearGradient id="eyeWhite" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f6f8fb"/><stop offset="1" stop-color="#dfe6ee"/>
-                </linearGradient>
-                <radialGradient id="pupil" cx=".4" cy=".35" r=".75">
-                  <stop offset="0" stop-color="#3d3760"/><stop offset=".55" stop-color="#1b1733"/><stop offset="1" stop-color="#0c0a1a"/>
-                </radialGradient>
-                <clipPath id="whiteL"><ellipse cx="289" cy="234" rx="42" ry="46"/></clipPath>
-                <clipPath id="whiteR"><ellipse cx="503" cy="234" rx="42" ry="46"/></clipPath>
               </defs>
-              <!-- Pou-style cartoon eyes drawn over Pip's own eyes; the pupils follow you -->
-              <g id="ceyes">
-                <!-- fur patches hiding Pip's own eyes underneath (shows during blinks) -->
-                <g filter="url(#softEdge)">
-                  <circle cx="289" cy="234" r="45" fill="#dfe2e3"/>
-                  <circle cx="503" cy="234" r="45" fill="#dfe2e3"/>
-                </g>
-                <g class="ceye">
-                  <ellipse cx="289" cy="234" rx="42" ry="46" fill="url(#eyeWhite)"/>
-                  <g clip-path="url(#whiteL)"><g id="pupilL">
-                    <circle cx="289" cy="236" r="25" fill="url(#pupil)"/>
-                    <circle cx="280" cy="226" r="8.5" fill="#fff"/>
-                    <circle cx="298" cy="245" r="3.8" fill="#fff" opacity=".9"/>
-                  </g></g>
-                  <ellipse cx="289" cy="234" rx="42" ry="46" fill="none" stroke="#1d1a33" stroke-width="5.5"/>
-                </g>
-                <g class="ceye">
-                  <ellipse cx="503" cy="234" rx="42" ry="46" fill="url(#eyeWhite)"/>
-                  <g clip-path="url(#whiteR)"><g id="pupilR">
-                    <circle cx="503" cy="236" r="25" fill="url(#pupil)"/>
-                    <circle cx="494" cy="226" r="8.5" fill="#fff"/>
-                    <circle cx="512" cy="245" r="3.8" fill="#fff" opacity=".9"/>
-                  </g></g>
-                  <ellipse cx="503" cy="234" rx="42" ry="46" fill="none" stroke="#1d1a33" stroke-width="5.5"/>
-                </g>
-              </g>
               <g id="dirt" mask="url(#furMask)">
                 <g filter="url(#softEdge)">
                   <ellipse cx="300" cy="620" rx="34" ry="26"/><ellipse cx="344" cy="660" rx="16" ry="12"/>
                   <ellipse cx="500" cy="720" rx="38" ry="28"/><ellipse cx="462" cy="760" rx="15" ry="11"/>
-                  <ellipse cx="220" cy="330" rx="24" ry="18"/><ellipse cx="560" cy="560" rx="22" ry="17"/>
+                  <ellipse cx="250" cy="500" rx="24" ry="18"/><ellipse cx="560" cy="560" rx="22" ry="17"/>
                   <ellipse cx="150" cy="560" rx="22" ry="17"/><ellipse cx="640" cy="520" rx="18" ry="14"/>
-                  <ellipse cx="420" cy="110" rx="18" ry="14"/>
+                  <ellipse cx="420" cy="800" rx="18" ry="14"/>
                 </g>
               </g>
-              <g id="lids">
-                <g filter="url(#softEdge)">
-                  <circle cx="294" cy="237" r="47" fill="#dfe2e3"/>
-                  <circle cx="505" cy="236" r="48" fill="#dfe2e3"/>
-                </g>
-                <path d="M256 246 Q294 272 332 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
-                <path d="M466 246 Q505 272 544 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
-              </g>
-              <circle id="beakPt" cx="394" cy="288" r="3" fill="none"/>
               <g id="bubbles" mask="url(#furMask)"></g>
-              <g id="hat"></g>
             </svg>
           </div>
         </div>
@@ -273,7 +285,7 @@
   <!-- ===== SLIDE-UP SHEET (shop, wardrobe, games) ===== -->
   <div id="sheet" hidden>
     <div class="sheet-card">
-      <div class="sheet-head"><h3 id="sheetTitle"></h3><span class="chip coins small">🪙 <b id="sheetCoins">0</b></span><button class="round-btn" id="sheetClose" aria-label="Close">✕</button></div>
+      <div class="sheet-head"><h3 id="sheetTitle"></h3><span class="chip coins small"><span data-icon="coin"></span><b id="sheetCoins">0</b></span><button class="round-btn" id="sheetClose" aria-label="Close"><span data-icon="close"></span></button></div>
       <div id="sheetBody"></div>
     </div>
   </div>
@@ -282,7 +294,7 @@
 <!-- ============ MINI-GAME OVERLAY ============ -->
 <section id="game" hidden>
   <div class="game-bar">
-    <button class="round-btn" id="gameClose" aria-label="Quit game">✕</button>
+    <button class="round-btn" id="gameClose" aria-label="Quit game"><span data-icon="close"></span></button>
     <div class="chip" id="gameScore">0</div>
     <div class="chip" id="gameLives"></div>
   </div>
@@ -290,11 +302,12 @@
   <div class="game-hint" id="gameHint"></div>
 </section>
 
-<div id="sponge" hidden>🧼</div>
+<div id="sponge" hidden><span data-icon="soap"></span></div>
 <div id="dragFood" hidden></div>
 <div id="toast" hidden></div>
 <div id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
 
+<script src="icons.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

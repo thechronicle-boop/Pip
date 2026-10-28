@@ -148,6 +148,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 #pet { position: relative; cursor: pointer; touch-action: none; aspect-ratio: 792 / 893; }
 #petBody { position: absolute; inset: 0; transform-origin: 50% 100%; animation: breathe 2.8s ease-in-out infinite; }
 #petTilt { position: absolute; inset: 0; }
+#petHead { position: absolute; inset: 0; transform-origin: 50% 42.5%; will-change: transform; pointer-events: none; }
+#headImg, #headFx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none; overflow: visible; transition: filter .6s; }
 #petImg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: filter .6s; -webkit-user-drag: none; }
 #petFx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 #dirt { fill: #7b5a3c; opacity: 0; transition: opacity .6s; }
@@ -158,13 +160,13 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 #pet.blink .ceye { transform: scaleY(.08); }
 #pet.sleeping #lids { transition: opacity .5s; }
 #pet.sleeping #petBody { animation: breathe 4.8s ease-in-out infinite; }
-#pet.sad #petImg { filter: saturate(.7) brightness(.96); }
+#pet.sad #petImg, #pet.sad #headImg { filter: saturate(.7) brightness(.96); }
 #pet.sad #petBody { animation: droop 3.6s ease-in-out infinite; }
 #pet.eating #petBody { animation: chew .16s ease-in-out infinite; }
 #pet.squish #petBody { animation: squish .45s cubic-bezier(.3,1.6,.5,1); }
 #pet.shake #petBody { animation: shake .5s; }
 #pet.happyjump #petBody { animation: hopOnce .7s cubic-bezier(.3,1.4,.5,1); }
-#pet.target #petImg { filter: drop-shadow(0 0 14px rgba(255,211,77,.9)); }
+#pet.target #petTilt { filter: drop-shadow(0 0 14px rgba(255,211,77,.9)); }
 
 @keyframes breathe { 0%,100% { transform: scale(1, 1); } 50% { transform: scale(1.02, .982); } }
 @keyframes droop { 0%,100% { transform: scale(1.01, .97) translateY(2px); } 50% { transform: scale(1.02, .955) translateY(3px); } }
@@ -324,3 +326,27 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   .need span { font-size: 1.2rem; }
   .needs { gap: 5px; }
 }
+
+/* ---------- cartoon icons (see icons.js) ---------- */
+.ic { width: 1em; height: 1em; display: inline-block; vertical-align: middle; overflow: visible; flex: 0 0 auto; }
+[data-icon] { display: inline-flex; }
+.need span .ic { width: 31px; height: 31px; }
+.chip .ic { width: 1.35em; height: 1.35em; }
+.round-btn .ic { width: 25px; height: 25px; }
+.act .ic { width: 48px; height: 48px; }
+.food-big .ic { width: 54px; height: 54px; pointer-events: none; }
+.item .ic { width: 46px; height: 46px; }
+.price .ic { width: 1.2em; height: 1.2em; vertical-align: -0.25em; }
+.game-card .ic { width: 42px; height: 42px; }
+.game-card .ic-img { width: 46px; height: auto; }
+.modal-card .big-e .ic { width: 78px; height: 78px; }
+#toast { display: flex; align-items: center; gap: 6px; }
+#toast .ic { width: 1.4em; height: 1.4em; }
+.heart .ic { width: 36px; height: 36px; }
+.fly .ic { width: 56px; height: 56px; }
+#dragFood .ic { width: 66px; height: 66px; }
+#thought .ic { width: 38px; height: 38px; }
+#sponge .ic { width: 52px; height: 52px; }
+#gameScore .ic, #gameLives .ic { width: 24px; height: 24px; }
+#gameLives { gap: 2px; }
+@media (max-height: 650px) { .act .ic { width: 40px; height: 40px; } }

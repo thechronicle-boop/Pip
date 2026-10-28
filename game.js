@@ -3,7 +3,8 @@
    Everything is saved in the browser (localStorage).
 
    Easy things to change:
-   - FOODS   : foods in the shop/fridge (emoji, how much they fill, price)
+   - FOODS   : foods in the shop/fridge (how much they fill, price);
+               each food's picture is the icon with the same name in icons.js
    - HATS    : accessories in the closet (SVG drawn over Pip's picture,
                which is 792 x 893: eyes at ~294,237 and ~505,236,
                top of the head at ~396,14)
@@ -23,18 +24,18 @@
 
   // ---------- content ----------
   const FOODS = {
-    fish:     { e: '🐟', n: 'Fish',      h: 22, f: 4, price: 14 },
-    shrimp:   { e: '🦐', n: 'Shrimp',    h: 10, f: 6, price: 9 },
-    apple:    { e: '🍎', n: 'Apple',     h: 14, price: 10 },
-    banana:   { e: '🍌', n: 'Banana',    h: 12, price: 8 },
-    carrot:   { e: '🥕', n: 'Carrot',    h: 10, price: 6 },
-    milk:     { e: '🥛', n: 'Milk',      h: 8,  en: 6, price: 10 },
-    cookie:   { e: '🍪', n: 'Cookie',    h: 8,  f: 8, price: 12 },
-    sandwich: { e: '🥪', n: 'Sandwich',  h: 28, price: 24 },
-    pizza:    { e: '🍕', n: 'Pizza',     h: 34, f: 6, price: 30 },
-    sushi:    { e: '🍣', n: 'Sushi',     h: 26, f: 4, price: 28 },
-    icecream: { e: '🍦', n: 'Ice cream', h: 12, f: 14, price: 20 },
-    cake:     { e: '🍰', n: 'Cake',      h: 20, f: 18, price: 40 },
+    fish:     { n: 'Fish',      h: 22, f: 4, price: 14 },
+    shrimp:   { n: 'Shrimp',    h: 10, f: 6, price: 9 },
+    apple:    { n: 'Apple',     h: 14, price: 10 },
+    banana:   { n: 'Banana',    h: 12, price: 8 },
+    carrot:   { n: 'Carrot',    h: 10, price: 6 },
+    milk:     { n: 'Milk',      h: 8,  en: 6, price: 10 },
+    cookie:   { n: 'Cookie',    h: 8,  f: 8, price: 12 },
+    sandwich: { n: 'Sandwich',  h: 28, price: 24 },
+    pizza:    { n: 'Pizza',     h: 34, f: 6, price: 30 },
+    sushi:    { n: 'Sushi',     h: 26, f: 4, price: 28 },
+    icecream: { n: 'Ice cream', h: 12, f: 14, price: 20 },
+    cake:     { n: 'Cake',      h: 20, f: 18, price: 40 },
   };
 
   // Each accessory is SVG in Pip's picture coordinates (792 x 893).
@@ -64,7 +65,7 @@
   // per-hour change while the game is closed
   const OFFLINE = { hunger: -6, clean: -4, energy: -5, fun: -5, sleepEnergy: 40 };
 
-  const STAT_ICON = { hunger: '🍎', clean: '🛁', energy: '🌙', fun: '🎮' };
+  const STAT_ICON = { hunger: 'hunger', clean: 'soap', energy: 'moon', fun: 'gamepad' };
   const ROOMS = ['kitchen', 'bath', 'bed', 'play', 'closet'];
   const ROOM_NAMES = { kitchen: 'Kitchen', bath: 'Bathroom', bed: 'Bedroom', play: 'Games', closet: 'Wardrobe' };
   const ROOM_TINT = { kitchen: '#ffd9a0', bath: '#cdeefd', bed: '#d8c8ff', play: '#c6f0bd', closet: '#ffd2e6' };
@@ -161,7 +162,7 @@
   let toastTimer;
   function toast(msg) {
     const t = $('#toast');
-    t.textContent = msg; t.hidden = false;
+    t.innerHTML = msg; t.hidden = false;
     t.style.animation = 'none'; void t.offsetWidth; t.style.animation = '';
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => (t.hidden = true), 1900);
@@ -184,9 +185,9 @@
     p.classList.remove(cls); void p.getBoundingClientRect(); p.classList.add(cls);
     setTimeout(() => p.classList.remove(cls), ms);
   }
-  function floatEmoji(e, x, y) {
+  function floatIcon(name, x, y) {
     const h = document.createElement('div');
-    h.className = 'heart'; h.textContent = e;
+    h.className = 'heart'; h.innerHTML = icon(name);
     h.style.left = x + 'px'; h.style.top = y + 'px';
     document.body.append(h);
     setTimeout(() => h.remove(), 1000);
@@ -224,7 +225,7 @@
     const low = lowestStat(), v = S.stats[low];
     pet.classList.toggle('sad', !S.asleep && v < 25);
     const th = $('#thought');
-    if (!S.asleep && v < 30) { th.textContent = STAT_ICON[low]; th.hidden = false; }
+    if (!S.asleep && v < 30) { if (th.dataset.k !== low) { th.innerHTML = icon(STAT_ICON[low]); th.dataset.k = low; } th.hidden = false; }
     else th.hidden = true;
     $('#zzz').hidden = !S.asleep;
     $('#dirt').style.opacity = clamp((65 - S.stats.clean) / 50, 0, 0.9);
@@ -242,35 +243,55 @@
     $('#coinNum').textContent = Math.floor(S.coins);
     $('#levelNum').textContent = S.level;
     $('#xpFill').style.width = (S.xp / xpNeed()) * 100 + '%';
-    $('#muteBtn').textContent = S.muted ? '🔇' : '🔊';
+    $('#muteBtn').innerHTML = icon(S.muted ? 'soundOff' : 'soundOn');
   }
 
-  // Pou-style cartoon eyes: the pupils follow your cursor or finger and
-  // drift back to looking at you when you stop.
-  // EYE_MAX = how far the pupils can travel, in picture pixels.
-  const EYE_MAX = { x: 14, y: 16 };
+  // Pou-style cartoon eyes: each pupil aims at your cursor or finger on its own
+  // (so they cross a little when you're between them), and the head leans
+  // gently toward you. With a mouse they keep watching while it's in the
+  // window; with touch they follow your finger, then relax back.
+  // EYE_MAX = how far the pupils travel; HEAD_MAX = how far the head leans.
+  const EYE_MAX = { x: 15, y: 17 };
+  const HEAD_MAX = { rot: 3, x: 10, y: 6 };
   const EYES = [
     { el: null, id: '#pupilL', x: 289, y: 234, cx: 0, cy: 0 },
     { el: null, id: '#pupilR', x: 503, y: 234, cx: 0, cy: 0 },
   ];
-  let lookTarget = null, lastLook = 0;
-  const setLook = (e) => { lookTarget = [e.clientX, e.clientY]; lastLook = performance.now(); };
+  const HEAD = { x: 396, y: 220, rot: 0, tx: 0, ty: 0 };
+  let lookTarget = null, lastLook = 0, mouseIn = false;
+  const setLook = (e) => {
+    lookTarget = [e.clientX, e.clientY]; lastLook = performance.now();
+    mouseIn = e.pointerType === 'mouse';
+  };
   document.addEventListener('pointermove', setLook);
   document.addEventListener('pointerdown', setLook);
+  document.addEventListener('mouseout', (e) => { if (!e.relatedTarget) { mouseIn = false; lastLook = 0; } });
   function updateEyes(now) {
-    const r = $('#petFx').getBoundingClientRect();
+    const r = $('#petTilt').getBoundingClientRect();
     if (!r.width) return;
     const sc = r.width / PIP_W;
-    const following = !S.asleep && lookTarget && now - lastLook < 3000;
+    const following = !S.asleep && lookTarget && (mouseIn || now - lastLook < 2500);
+    // head lean
+    let hr = 0, hx = 0, hy = 0;
+    if (following && !scrubbing) {
+      const dx = lookTarget[0] - (r.left + HEAD.x * sc), dy = lookTarget[1] - (r.top + HEAD.y * sc);
+      const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 260);
+      hr = (dx / d) * m * HEAD_MAX.rot; hx = (dx / d) * m * HEAD_MAX.x; hy = (dy / d) * m * HEAD_MAX.y;
+    }
+    const kh = following ? 0.09 : 0.05;
+    HEAD.rot += (hr - HEAD.rot) * kh; HEAD.tx += (hx - HEAD.tx) * kh; HEAD.ty += (hy - HEAD.ty) * kh;
+    $('#petHead').style.transform = `translate(${(HEAD.tx * sc).toFixed(2)}px, ${(HEAD.ty * sc).toFixed(2)}px) rotate(${HEAD.rot.toFixed(2)}deg)`;
+    // each eye aims from its own position
     for (const eye of EYES) {
       eye.el = eye.el || $(eye.id);
       let tx = 0, ty = 0;
       if (following) {
-        const dx = lookTarget[0] - (r.left + eye.x * sc), dy = lookTarget[1] - (r.top + eye.y * sc);
-        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 180);
+        const ex = r.left + (eye.x + HEAD.tx) * sc, ey = r.top + (eye.y + HEAD.ty) * sc;
+        const dx = lookTarget[0] - ex, dy = lookTarget[1] - ey;
+        const d = Math.hypot(dx, dy) || 1, m = Math.min(1, d / 70);
         tx = (dx / d) * m * EYE_MAX.x; ty = (dy / d) * m * EYE_MAX.y;
       }
-      const k = following ? 0.22 : 0.08;
+      const k = following ? 0.3 : 0.08;
       eye.cx += (tx - eye.cx) * k; eye.cy += (ty - eye.cy) * k;
       eye.el.setAttribute('transform', `translate(${eye.cx.toFixed(2)} ${eye.cy.toFixed(2)})`);
     }
@@ -316,23 +337,23 @@
     if (room === 'kitchen') {
       const owned = ownedFoods();
       if (!owned.length) {
-        c.innerHTML = `<button class="act yellow" data-sheet="shop">🛒<small>Buy food</small></button>`;
+        c.innerHTML = `<button class="act yellow" data-sheet="shop">${icon('cart')}<small>Buy food</small></button>`;
         return;
       }
       foodIdx = ((foodIdx % owned.length) + owned.length) % owned.length;
       const k = owned[foodIdx];
       c.innerHTML = `<button class="mini" data-fprev aria-label="Previous food">${CHEV_L}</button>
-        <button class="act food-big" data-feed="${k}" aria-label="${FOODS[k].n}"><span class="e">${FOODS[k].e}</span><span class="count">${S.food[k]}</span><small>${FOODS[k].n}</small></button>
+        <button class="act food-big" data-feed="${k}" aria-label="${FOODS[k].n}"><span class="e">${icon(k)}</span><span class="count">${S.food[k]}</span><small>${FOODS[k].n}</small></button>
         <button class="mini" data-fnext aria-label="Next food">${CHEV_R}</button>`;
     } else if (room === 'bath') {
-      c.innerHTML = `<button class="act ${bathTool === 'soap' ? 'on' : ''}" data-tool>🧼<small>Soap</small></button>
-        <button class="act" data-shower>🚿<small>Rinse</small></button>`;
+      c.innerHTML = `<button class="act ${bathTool === 'soap' ? 'on' : ''}" data-tool>${icon('soap')}<small>Soap</small></button>
+        <button class="act" data-shower>${icon('shower')}<small>Rinse</small></button>`;
     } else if (room === 'bed') {
-      c.innerHTML = `<button class="act ${S.asleep ? '' : 'yellow'}" data-lamp>${S.asleep ? '🌙' : '💡'}<small>${S.asleep ? 'Wake up' : 'Lights off'}</small></button>`;
+      c.innerHTML = `<button class="act ${S.asleep ? '' : 'yellow'}" data-lamp>${icon(S.asleep ? 'moon' : 'bulb')}<small>${S.asleep ? 'Wake up' : 'Lights off'}</small></button>`;
     } else if (room === 'play') {
-      c.innerHTML = `<button class="act pink" data-sheet="games">🎮<small>Play</small></button>`;
+      c.innerHTML = `<button class="act pink" data-sheet="games">${icon('gamepad')}<small>Play</small></button>`;
     } else if (room === 'closet') {
-      c.innerHTML = `<button class="act pink" data-sheet="closet">👕<small>Dress up</small></button>`;
+      c.innerHTML = `<button class="act pink" data-sheet="closet">${icon('shirt')}<small>Dress up</small></button>`;
     }
   }
 
@@ -345,19 +366,19 @@
     if (sheet === 'shop') {
       $('#sheetTitle').textContent = 'Food shop';
       body.innerHTML = '<div class="grid">' + Object.entries(FOODS).map(([k, f]) =>
-        `<button class="item" data-buyfood="${k}"><span class="e">${f.e}</span><span class="name">${f.n}</span><span class="price">🪙 ${f.price}</span><span class="owned">have ${S.food[k] || 0}</span></button>`).join('') + '</div>';
+        `<button class="item" data-buyfood="${k}"><span class="e">${icon(k)}</span><span class="name">${f.n}</span><span class="price">${icon('coin')} ${f.price}</span><span class="owned">have ${S.food[k] || 0}</span></button>`).join('') + '</div>';
     } else if (sheet === 'closet') {
       $('#sheetTitle').textContent = 'Wardrobe';
       body.innerHTML = '<div class="grid">' + Object.entries(HATS).map(([k, h]) => {
         const own = S.ownedHats.includes(k);
-        const prev = k === 'none' ? '<span class="e">🐧</span>' : `<svg viewBox="${h.box}">${h.svg}</svg>`;
-        return `<button class="item ${S.hat === k ? 'on' : ''}" data-hat="${k}">${prev}<span class="name">${h.n}</span>${own ? `<span class="owned">${S.hat === k ? 'wearing' : 'owned'}</span>` : `<span class="price">🪙 ${h.price}</span>`}</button>`;
+        const prev = k === 'none' ? `<span class="e">${icon('nope')}</span>` : `<svg viewBox="${h.box}">${h.svg}</svg>`;
+        return `<button class="item ${S.hat === k ? 'on' : ''}" data-hat="${k}">${prev}<span class="name">${h.n}</span>${own ? `<span class="owned">${S.hat === k ? 'wearing' : 'owned'}</span>` : `<span class="price">${icon('coin')} ${h.price}</span>`}</button>`;
       }).join('') + '</div>';
     } else if (sheet === 'games') {
       $('#sheetTitle').textContent = 'Games';
       body.innerHTML = `<div class="games">
-        <button class="game-card catch" data-game="catch"><span class="e">⭐</span><b>Star Catch</b><small>Best ${S.best.catch} · dodge the storm clouds</small></button>
-        <button class="game-card bounce" data-game="bounce"><span class="e">🐧</span><b>Bounce</b><small>Best ${S.best.bounce} · keep Pip in the air</small></button>
+        <button class="game-card catch" data-game="catch"><span class="e">${icon('star')}</span><b>Star Catch</b><small>Best ${S.best.catch} · dodge the storm clouds</small></button>
+        <button class="game-card bounce" data-game="bounce"><span class="e"><img class="ic-img" src="pip.webp" alt=""></span><b>Bounce</b><small>Best ${S.best.bounce} · keep Pip in the air</small></button>
       </div>`;
     }
   }
@@ -374,7 +395,7 @@
     const m = $('#beakPt').getBoundingClientRect();
     const tx = m.left + m.width / 2, ty = m.top + m.height / 2;
     const fly = document.createElement('div');
-    fly.className = 'fly'; fly.textContent = f.e;
+    fly.className = 'fly'; fly.innerHTML = icon(key);
     const sx = a.left + a.width / 2, sy = a.top + a.height / 2;
     fly.style.left = sx + 'px'; fly.style.top = sy + 'px';
     document.body.append(fly);
@@ -482,7 +503,7 @@
     setTimeout(() => {
       sh.hidden = true; sh.innerHTML = '';
       S.stats.clean = clamp(S.stats.clean + gain, 0, 100);
-      if (S.stats.clean >= 95) { toast('Squeaky clean! ✨'); addXp(4); }
+      if (S.stats.clean >= 95) { toast('Squeaky clean! ' + icon('sparkle')); addXp(4); }
       petClass('squish', 450); renderFace(); renderHud(); save();
     }, 1300);
   }
@@ -504,7 +525,7 @@
       if (now - lastTickle < 350) return;
       lastTickle = now;
       petClass('squish', 450); SFX.giggle();
-      floatEmoji(Math.random() < 0.7 ? '💖' : '✨', e.clientX, e.clientY - 10);
+      floatIcon(Math.random() < 0.7 ? 'heart' : 'sparkle', e.clientX, e.clientY - 10);
       S.stats.fun = clamp(S.stats.fun + 1.5, 0, 100);
       addXp(1); renderFace(); renderHud();
     });
@@ -531,7 +552,7 @@
     $('#controls').addEventListener('pointermove', (e) => {
       if (!drag) return;
       if (!drag.moved && Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) > 10) {
-        drag.moved = true; ghost.textContent = FOODS[drag.key].e; ghost.hidden = false; drag.el.classList.add('dragging');
+        drag.moved = true; ghost.innerHTML = icon(drag.key); ghost.hidden = false; drag.el.classList.add('dragging');
       }
       if (drag.moved) {
         ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px';
@@ -605,7 +626,7 @@
     s.fun += RATES.fun * m * slow;
     s.energy += (S.asleep ? RATES.sleepEnergy : RATES.energy) * m;
     clampStats();
-    if (S.asleep && s.energy >= 100 && room === 'bed') { wake(false); toast('Pip woke up refreshed! ☀️'); }
+    if (S.asleep && s.energy >= 100 && room === 'bed') { wake(false); toast('Pip woke up refreshed! ' + icon('sun')); }
     renderHud(); renderFace();
     if (++tickCount % 5 === 0) save();
   }
@@ -616,7 +637,7 @@
     S.lastDaily = today;
     const gift = 40 + Math.min(60, S.level * 5);
     S.coins += gift; save(); renderHud();
-    setTimeout(() => { SFX.coin(); modal(`<div class="big-e">🎁</div><h2>Daily gift</h2><p>Pip found <b>${gift} coins</b> for you today.</p>`, [['Yay!']]); }, 600);
+    setTimeout(() => { SFX.coin(); modal(`<div class="big-e">${icon('gift')}</div><h2>Daily gift</h2><p>Pip found <b>${gift} coins</b> for you today.</p>`, [['Yay!']]); }, 600);
   }
 
   // =================================================================
@@ -651,15 +672,16 @@
       cx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
     }
     cx.closePath(); cx.fillStyle = color; cx.fill();
+    cx.lineWidth = Math.max(2.5, r * 0.16); cx.lineJoin = 'round'; cx.strokeStyle = '#2b2140'; cx.stroke();
     cx.restore();
   }
   function drawCloud(x, y, r) {
-    cx.fillStyle = '#5c5675';
-    cx.beginPath();
-    cx.arc(x - r * 0.5, y, r * 0.55, 0, 7); cx.arc(x + r * 0.5, y, r * 0.55, 0, 7); cx.arc(x, y - r * 0.35, r * 0.7, 0, 7);
-    cx.fill();
-    cx.strokeStyle = '#ffd34d'; cx.lineWidth = 4; cx.lineJoin = 'round';
+    const blob = () => { cx.beginPath(); cx.arc(x - r * 0.5, y, r * 0.55, 0, 7); cx.moveTo(x + r * 1.05, y); cx.arc(x + r * 0.5, y, r * 0.55, 0, 7); cx.moveTo(x + r * 0.7, y - r * 0.35); cx.arc(x, y - r * 0.35, r * 0.7, 0, 7); };
+    cx.strokeStyle = '#2b2140'; cx.lineWidth = 7; blob(); cx.stroke();
+    cx.fillStyle = '#6c6688'; blob(); cx.fill();
+    cx.strokeStyle = '#2b2140'; cx.lineWidth = 8; cx.lineJoin = 'round'; cx.lineCap = 'round';
     cx.beginPath(); cx.moveTo(x + 2, y + r * 0.4); cx.lineTo(x - 8, y + r * 0.95); cx.lineTo(x + 4, y + r * 0.95); cx.lineTo(x - 6, y + r * 1.5); cx.stroke();
+    cx.strokeStyle = '#ffd34d'; cx.lineWidth = 4; cx.stroke();
   }
   function bgStars(t) {
     for (let i = 0; i < 40; i++) {
@@ -671,14 +693,14 @@
 
   function startGame(type) {
     if (S.asleep) return toast('Pip is asleep');
-    if (S.stats.energy < 12) { SFX.nope(); petClass('shake', 500); return toast('Too sleepy to play… 😴'); }
+    if (S.stats.energy < 12) { SFX.nope(); petClass('shake', 500); return toast('Too sleepy to play… ' + icon('sleepy')); }
     sizeCanvas();
     $('#game').hidden = false;
     G.type = type; G.running = true; G.score = 0; G.t = 0; G.last = performance.now();
     G.over = false; G.parts = [];
     if (type === 'catch') {
       G.lives = 3; G.items = []; G.spawn = 0; G.px = W / 2; G.tx = W / 2; G.squash = 0;
-      $('#gameHint').textContent = 'Drag to catch the stars ⭐';
+      $('#gameHint').textContent = 'Drag to catch the stars!';
     } else {
       G.ball = { x: W / 2, y: H * 0.35, vx: 0, vy: 0, r: Math.min(52, W * 0.12), sq: 0 };
       G.started = false;
@@ -690,8 +712,8 @@
     G.raf = requestAnimationFrame(gameFrame);
   }
   function updateGameHud() {
-    $('#gameScore').textContent = (G.type === 'catch' ? '⭐ ' : '🫧 ') + G.score;
-    $('#gameLives').textContent = G.type === 'catch' ? '💖'.repeat(G.lives) + '🤍'.repeat(3 - G.lives) : `Best ${S.best.bounce}`;
+    $('#gameScore').innerHTML = icon(G.type === 'catch' ? 'star' : 'bubble') + ' ' + G.score;
+    $('#gameLives').innerHTML = G.type === 'catch' ? icon('heart').repeat(G.lives) + icon('heartEmpty').repeat(3 - G.lives) : `Best ${S.best.bounce}`;
   }
   function burst(x, y, color, n = 10) {
     for (let i = 0; i < n; i++) G.parts.push({ x, y, vx: rnd(-160, 160), vy: rnd(-220, 40), life: 0.6, color });
@@ -821,7 +843,7 @@
     if (quit && score === 0) return close();
     SFX.coin();
     setTimeout(() => modal(
-      `<div class="big-e">${isBest ? '🏆' : type === 'catch' ? '⭐' : '🐧'}</div><h2>${isBest ? 'New best!' : 'Nice one!'}</h2><p>Score <b>${score}</b> · you earned <b>🪙 ${coins}</b></p>`,
+      `<div class="big-e">${icon(isBest ? 'trophy' : type === 'catch' ? 'star' : 'bubble')}</div><h2>${isBest ? 'New best!' : 'Nice one!'}</h2><p>Score <b>${score}</b> · you earned <b>${icon('coin')} ${coins}</b></p>`,
       [['Play again', () => { close(); startGame(type); }], ['Back', close, true]]
     ), 250);
   }
@@ -857,6 +879,7 @@
   }
 
   function init() {
+    $$('[data-icon]').forEach((el) => { el.innerHTML = icon(el.dataset.icon); });
     load(); applyOffline(); save();
     applyLook(); renderHud(); renderFace();
     bindPet(); bindPanel(); bindFoodDrag();
