@@ -15,7 +15,7 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 - **Bedroom**: lights off and Pip closes its eyes to sleep, energy refills, Pip wakes up when full
 - **Games**: *Star Catch* (catch stars, dodge storm clouds) and *Bounce* (tap to keep Pip in the air)
 - **Wardrobe**: 8 accessories to unlock
-- Tap Pip for giggles, Pip has Pou-style cartoon eyes that each follow your cursor or finger, and the head leans toward you (`EYE_MAX`, `EYE_SOLO` and `HEAD_MAX` in `game.js` set how far), blinks, droops when a need is very low, levels and XP, a daily coin gift, sound effects (with mute)
+- Tap Pip for giggles, Pip's own eyes (same as the loading screen) each turn to follow your cursor or finger, and the head and scarf lean toward you (`EYE_MAX`, `EYE_SOLO` and `HEAD_MAX` in `game.js` set how far), blinks, droops when a need is very low, levels and XP, a daily coin gift, sound effects (with mute)
 
 ## Files
 
@@ -26,6 +26,7 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 | `game.js` | Everything that happens |
 | `icons.js` | Every cartoon icon in the game (food, needs, buttons, coins, hearts…) drawn as SVG |
 | `pip.webp` | Pip's full picture (792 × 893, transparent background), used on the loading screen and in games |
+| `eye_frame_*.webp`, `eye_inner_*.webp` | Each of Pip's eyes split into the still outline and the inside that turns to look around |
 | `pip_head.webp`, `pip_body.webp` | Pip split so the head and scarf turn together from the neck (original eyes painted out of the head; fur painted in behind the scarf on the body) |
 | `wrangler.jsonc`, `.assetsignore` | Tell Cloudflare to publish the site as plain files |
 
@@ -37,7 +38,7 @@ Plain HTML, CSS and JavaScript. No build step, no installs. Progress saves in th
 - **How fast needs drop**: `RATES` (per minute while open) and `OFFLINE` (per hour while closed)
 - **Starting coins and food**: the `fresh()` function
 - **Rooms**: each room's background is an SVG `scene` in `index.html`; the walk order is `ROOMS` in `game.js`
-- **New look for Pip**: replace `pip.webp`, `pip_head.webp` and `pip_body.webp` with another 792 × 893 picture with a transparent background (ask Claude to re-split the head and body). If the eyes move, update the cartoon eyes (`#ceyes`), sleeping eyelids (`#lids`) and beak point (`#beakPt`) in `index.html`
+- **New look for Pip**: replace `pip.webp`, `pip_head.webp` and `pip_body.webp` with another 792 × 893 picture with a transparent background (ask Claude to re-split the head and body). If the eyes move, update the eyes (`#ceyes` and the eye images; ask Claude to re-cut them), sleeping eyelids (`#lids`) and beak point (`#beakPt`) in `index.html`
 
 After changing anything, refresh the page. To reset a save, open the browser console and run `localStorage.removeItem('pip-save-v1')`.
 

@@ -154,10 +154,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 #petFx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 #dirt { fill: #7b5a3c; opacity: 0; transition: opacity .6s; }
 #lids { opacity: 0; transition: opacity .06s; }
-#pet.sleeping #lids { opacity: 1; }
-#pet.sleeping #ceyes { display: none; }
-.ceye { transform-box: fill-box; transform-origin: center; transition: transform .07s ease-in; }
-#pet.blink .ceye { transform: scaleY(.08); }
+#pet.sleeping #lids, #pet.blink #lids { opacity: 1; }
+#pet.sleeping #ceyes, #pet.blink #ceyes { visibility: hidden; }
 #pet.sleeping #lids { transition: opacity .5s; }
 #pet.sleeping #petBody { animation: breathe 4.8s ease-in-out infinite; }
 #pet.sad #petImg, #pet.sad #headImg { filter: saturate(.7) brightness(.96); }

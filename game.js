@@ -246,17 +246,17 @@
     $('#muteBtn').innerHTML = icon(S.muted ? 'soundOff' : 'soundOn');
   }
 
-  // Pou-style cartoon eyes: both pupils look toward your cursor or finger
-  // together, with a small bit of each eye aiming on its own (EYE_SOLO) so
-  // they feel alive without going cross-eyed. The head leans gently toward you, turning from the neck with the scarf. With a mouse they keep watching while it's in the
+  // Pip's own eyes: everything inside each eye's outline turns toward your
+  // cursor or finger. EYE_SOLO sets how much each eye aims on its own
+  // (0 = both move as a pair, 1 = fully separate). The head leans gently toward you, turning from the neck with the scarf. With a mouse they keep watching while it's in the
   // window; with touch they follow your finger, then relax back.
   // EYE_MAX = how far the pupils travel; HEAD_MAX = how far the head leans.
-  const EYE_MAX = { x: 8, y: 6 };
-  const EYE_SOLO = 0.2; // 0 = eyes move as a pair, 1 = each aims fully on its own
+  const EYE_MAX = { x: 7, y: 5 };
+  const EYE_SOLO = 0.5; // 0 = eyes move as a pair, 1 = each aims fully on its own
   const HEAD_MAX = { rot: 3, x: 3, y: 2 };
   const EYES = [
-    { el: null, id: '#pupilL', x: 289, y: 234, cx: 0, cy: 0 },
-    { el: null, id: '#pupilR', x: 503, y: 234, cx: 0, cy: 0 },
+    { el: null, id: '#pupilL', x: 288.4, y: 233.9, cx: 0, cy: 0 },
+    { el: null, id: '#pupilR', x: 502.7, y: 233.8, cx: 0, cy: 0 },
   ];
   const HEAD = { x: 396, y: 220, rot: 0, tx: 0, ty: 0 };
   let lookTarget = null, lastLook = 0, mouseIn = false;
