@@ -251,7 +251,7 @@
   // they feel alive without going cross-eyed. The head leans gently toward you. With a mouse they keep watching while it's in the
   // window; with touch they follow your finger, then relax back.
   // EYE_MAX = how far the pupils travel; HEAD_MAX = how far the head leans.
-  const EYE_MAX = { x: 11, y: 11 };
+  const EYE_MAX = { x: 8, y: 6 };
   const EYE_SOLO = 0.2; // 0 = eyes move as a pair, 1 = each aims fully on its own
   const HEAD_MAX = { rot: 3, x: 10, y: 6 };
   const EYES = [

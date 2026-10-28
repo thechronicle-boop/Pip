@@ -205,42 +205,40 @@
                   <radialGradient id="pupil" cx=".4" cy=".35" r=".75">
                     <stop offset="0" stop-color="#3d3760"/><stop offset=".55" stop-color="#1b1733"/><stop offset="1" stop-color="#0c0a1a"/>
                   </radialGradient>
-                  <clipPath id="whiteL"><ellipse cx="289" cy="234" rx="42" ry="46"/></clipPath>
-                  <clipPath id="whiteR"><ellipse cx="503" cy="234" rx="42" ry="46"/></clipPath>
+                  <radialGradient id="gIris" cx=".45" cy=".3" r=".8">
+                    <stop offset="0" stop-color="#4b4275"/><stop offset=".6" stop-color="#1e1838"/><stop offset="1" stop-color="#0d0a1c"/>
+                  </radialGradient>
+                  <clipPath id="whiteL"><ellipse cx="289" cy="234" rx="41" ry="46"/></clipPath>
+                  <clipPath id="whiteR"><ellipse cx="503" cy="234" rx="41" ry="46"/></clipPath>
                 </defs>
-                <!-- Pou-style cartoon eyes drawn over Pip's own eyes; each pupil follows you on its own -->
+                <!-- glossy cartoon eyes: the dark iris shifts to look at you, the sparkles stay put -->
                 <g id="ceyes">
-                  <!-- fur patches hiding Pip's own eyes underneath (shows during blinks) -->
-                  <g filter="url(#softEdgeH)">
-                    <circle cx="289" cy="234" r="45" fill="#dfe2e3"/>
-                    <circle cx="503" cy="234" r="45" fill="#dfe2e3"/>
-                  </g>
                   <g class="ceye">
-                    <ellipse cx="289" cy="234" rx="42" ry="46" fill="url(#eyeWhite)"/>
+                    <ellipse cx="289" cy="234" rx="41" ry="46" fill="#fff"/>
                     <g clip-path="url(#whiteL)"><g id="pupilL">
-                      <circle cx="289" cy="236" r="25" fill="url(#pupil)"/>
-                      <circle cx="280" cy="226" r="8.5" fill="#fff"/>
-                      <circle cx="298" cy="245" r="3.8" fill="#fff" opacity=".9"/>
+                      <ellipse cx="289" cy="237" rx="34" ry="39" fill="url(#gIris)"/>
+                      <ellipse cx="289" cy="258" rx="22" ry="11" fill="#8a7fd0" opacity=".45"/>
                     </g></g>
-                    <ellipse cx="289" cy="234" rx="42" ry="46" fill="none" stroke="#1d1a33" stroke-width="5.5"/>
+                    <ellipse cx="289" cy="234" rx="41" ry="46" fill="none" stroke="#1d1a33" stroke-width="3.5"/>
+                    <circle cx="276" cy="219" r="11.5" fill="#fff"/>
+                    <circle cx="302" cy="249" r="5" fill="#fff"/>
+                    <circle cx="305" cy="216" r="3" fill="#fff" opacity=".9"/>
                   </g>
                   <g class="ceye">
-                    <ellipse cx="503" cy="234" rx="42" ry="46" fill="url(#eyeWhite)"/>
+                    <ellipse cx="503" cy="234" rx="41" ry="46" fill="#fff"/>
                     <g clip-path="url(#whiteR)"><g id="pupilR">
-                      <circle cx="503" cy="236" r="25" fill="url(#pupil)"/>
-                      <circle cx="494" cy="226" r="8.5" fill="#fff"/>
-                      <circle cx="512" cy="245" r="3.8" fill="#fff" opacity=".9"/>
+                      <ellipse cx="503" cy="237" rx="34" ry="39" fill="url(#gIris)"/>
+                      <ellipse cx="503" cy="258" rx="22" ry="11" fill="#8a7fd0" opacity=".45"/>
                     </g></g>
-                    <ellipse cx="503" cy="234" rx="42" ry="46" fill="none" stroke="#1d1a33" stroke-width="5.5"/>
+                    <ellipse cx="503" cy="234" rx="41" ry="46" fill="none" stroke="#1d1a33" stroke-width="3.5"/>
+                    <circle cx="490" cy="219" r="11.5" fill="#fff"/>
+                    <circle cx="516" cy="249" r="5" fill="#fff"/>
+                    <circle cx="519" cy="216" r="3" fill="#fff" opacity=".9"/>
                   </g>
                 </g>
                 <g id="lids">
-                  <g filter="url(#softEdgeH)">
-                    <circle cx="294" cy="237" r="47" fill="#dfe2e3"/>
-                    <circle cx="505" cy="236" r="48" fill="#dfe2e3"/>
-                  </g>
-                  <path d="M256 246 Q294 272 332 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
-                  <path d="M466 246 Q505 272 544 246" fill="none" stroke="#2b2836" stroke-width="8" stroke-linecap="round"/>
+                  <path d="M253 240 Q289 266 325 240" fill="none" stroke="#2b2836" stroke-width="7" stroke-linecap="round"/>
+                  <path d="M467 240 Q503 266 539 240" fill="none" stroke="#2b2836" stroke-width="7" stroke-linecap="round"/>
                 </g>
                 <circle id="beakPt" cx="394" cy="288" r="3" fill="none"/>
                 <g id="hat"></g>
